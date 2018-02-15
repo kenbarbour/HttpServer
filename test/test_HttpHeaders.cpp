@@ -2,6 +2,8 @@
 #include "HttpHeaders.h"
 #include "string.h"
 
+using Catch::Matchers::Equals;
+
 TEST_CASE("Empty HttpHeaders","[HttpHeaders]") {
    HttpHeaders headers; 
    
@@ -20,32 +22,33 @@ TEST_CASE("Get and set headers","[HttpHeaders]"){
     CHECK(headers.count() == 1);
 }
 
-TEST_CASE("Overwrite header with smaller header","[HttpHeaders]"){
+TEST_CASE("Append headers","[HttpHeaders]"){
     HttpHeaders headers;
     headers.set("foo","sushi");
     headers.set("foo","soy");
 
-    CHECK(strcmp(headers.get("foo"),"soy") == 0);
+    CHECK_THAT(headers.get("foo"), Equals("sushi, soy"));
     CHECK(headers.count() == 1);
-}
-
-TEST_CASE("Overwrite header with larger header","[HttpHeaders]"){
-    HttpHeaders headers;
-    headers.set("foo","pear");
-    headers.set("foo","watermelon");
-    
-    CHECK(strcmp(headers.get("foo"),"watermelon") == 0);
-    CHECK(headers.count()==1);
 }
 
 TEST_CASE("Force headers to grow","[HttpHeaders]") {
     HttpHeaders headers;
-    char * name = "header_";
-    /*
-    for (int i = 0; i < 30; i++) {
+    char name[8] = "";
+    strcpy(name, "header");
+   
+    for (int i = 0; i < 26; i++) {
         name[6] = 0x41 + i;
         headers.set(name,"Foo");
         REQUIRE(strcmp(headers.get(name),"Foo") == 0);
-    }
-    */
+        CHECK(headers.count() == (i+1) );
+    } 
 }
+
+/* TODO: enable this test case while fixing header case sensitivity
+TEST_CASE("Header name is case insensitive","[HttpHeaders]") {
+    HttpHeaders headers;
+
+    headers.set("Foo","bar");
+
+    CHECK(headers.has("foo"));
+}*/

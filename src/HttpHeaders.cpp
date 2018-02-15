@@ -14,14 +14,27 @@ HttpHeaders::HttpHeaders() : _n(0) {
 }
 
 void HttpHeaders::set(const char* name, const char* value) {
+
+    int name_len = strlen(name);
+    int value_len = strlen(value);
+
+    // search for existing node with name and append value
     for (int i = 0; i < count(); i++) {
         if (strcmp(name, headers[i].name) != 0)
             continue;
-        free(headers[i].value);
-        headers[i].value = (char *) malloc(sizeof(char) * strlen(value));
-        strcpy(headers[i].value, value);
+        int old_value_len = strlen(headers[i].value);
+        headers[i].value = (char *) realloc(headers[i].value, old_value_len + value_len + 2);
+        strcpy(headers[i].value+old_value_len, ", ");
+        strcpy(headers[i].value+old_value_len+2, value);
         return;
     }
+
+    // Grow headers if needed
+    if (_n && (_n % HTTPHEADERS_SIZE) == 0) {
+        headers = (HttpHeaderNode*) realloc(headers, sizeof(HttpHeaderNode) * HTTPHEADERS_SIZE * (_n / HTTPHEADERS_SIZE + 1));
+    }
+
+    // create and store new node with name and value
     headers[_n].name  = (char *) malloc(sizeof(char) * strlen(name));
     headers[_n].value = (char *) malloc(sizeof(char) * strlen(value));
     strcpy(headers[_n].name, name);

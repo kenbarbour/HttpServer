@@ -1,0 +1,4 @@
+.build
+.deps
+run_tests
+*.swp

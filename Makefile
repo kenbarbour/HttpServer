@@ -1,11 +1,11 @@
-MODULES= test libraries/HttpServer
+MODULES= src test
 
 SOURCES ?= $(wildcard $(addsuffix /*.cpp, $(MODULES)))
 OBJECTS := $(addsuffix .o, $(addprefix .build/, $(basename $(SOURCES))))
 DEPFILES := $(subst .o,.dep, $(subst .build/,.deps/, $(OBJECTS)))
-TESTCPPFLAGS = -D_TEST_ -Ilibraries/HttpServer -Itest -Iarduino
+TESTCPPFLAGS = -D_TEST_ $(addprefix -I, $(MODULES)) -Iarduino
 CPPDEPFLAGS = -MMD -MP -MF .deps/$(basename $<).dep
-TEST_TARGET=test_HttpServer
+TEST_TARGET=run_tests
 
 .PHONY: all test clean
 
