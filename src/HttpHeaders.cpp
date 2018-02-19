@@ -81,5 +81,8 @@ HttpHeaders::~HttpHeaders() {
         free(headers[i].name);
         free(headers[i].value);
     }
-    free(headers);
+    if (headers) {
+        free(headers);
+        headers = nullptr;
+    }
 }

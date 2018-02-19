@@ -1,12 +1,18 @@
 #include "HttpRequest.h"
-#include <iostream>
 
 #define HTTPREQUEST_TRIM(stream) while(stream.peek()==' ') { stream.read(); }
 #define HTTPREQUEST_BUFFER_UNTIL(buff, strm, stop, n)\
     for (n=0; strm.peek() != stop;n++) \
         { buff[n] = (char) strm.read(); }
 
-void HttpRequest::capture()
+HttpRequest::HttpRequest(): method(), url(), httpver(), message(), message_length(0) {}
+
+HttpRequest::HttpRequest(Stream &client):method(), url(), httpver(), headers(), message(), message_length(0)
+{
+    this->capture(client);
+}
+
+void HttpRequest::capture(Stream &client)
 {
     long int i, k;
     char buffer[HTTPREQUEST_MAX_MESSAGE_SIZE] = {0};
@@ -16,22 +22,21 @@ void HttpRequest::capture()
     // Read method until ' '
     //for (i=0; client.peek() != ' '; i++) buffer[i] = (char) client.read();
     HTTPREQUEST_BUFFER_UNTIL(buffer, client, ' ', i);
-    strncpy(method, buffer, HTTPREQUEST_METHOD_SIZE);
+    setMethod(buffer);
     for (k=0; k <= i; k++) buffer[k] = '\0'; //reset buffer
 
     HTTPREQUEST_TRIM(client);
 
     // Read url until ' '
     for (i=0; client.peek() != ' '; i++) buffer[i] = (char) client.read();
-    url = (char*) malloc( i + 1 );
-    strcpy(url, buffer);
+    setUrl(buffer, i+1);
     for (k=0; k <= i; k++) buffer[k] = '\0'; //reset buffer
 
     HTTPREQUEST_TRIM(client);   
  
     // Read httpver until '\r'
     for (i=0; client.peek() != '\r'; i++) buffer[i] = (char) client.read();
-    strncpy(httpver, buffer, HTTPREQUEST_HTTPVER_SIZE);
+    setHttpVer(buffer);
     for (k=0; k <= i; k++) buffer[k] = '\0'; //reset buffer
 
     // discard line break
@@ -84,9 +89,75 @@ void HttpRequest::capture()
     message_length = i;
     
 }
+const char * HttpRequest::setMethod(const char * method)
+{
+    strncpy(this->method, method, HTTPREQUEST_METHOD_SIZE);
+    return this->method;
+}
+
+const char * HttpRequest::getMethod()
+{
+    return method;
+}
+
+const char * HttpRequest::setHttpVer(const char * ver)
+{
+    strncpy(this->httpver, ver, HTTPREQUEST_HTTPVER_SIZE);
+    return this->httpver;
+}
+
+const char * HttpRequest::getHttpVer()
+{
+    return httpver;
+}
+
+const char * HttpRequest::setUrl(const char * url, size_t n)
+{
+    if (this->url) free(this->url);
+    this->url =  (char *) malloc(n);
+    strncpy(this->url, url, n);
+    return this->url;
+}
+
+const char * HttpRequest::setUrl(const char * url)
+{
+    size_t len = strlen(url);
+    return this->setUrl(url, len);
+}
+
+const char * HttpRequest::getUrl()
+{
+    return this->url;
+}
+
+const char * HttpRequest::setMessage(const char * message)
+{
+    size_t len = strlen(message);
+    return this->setMessage(message, len);
+}
+
+const char * HttpRequest::setMessage(const char * message, size_t n)
+{
+    if (this->message) free(this->message);
+    this->message = (char *) malloc(n);
+    message_length = n;
+    strncpy(this->message, message, n+1);
+    return this->message;
+}
+
+const char * HttpRequest::getMessage()
+{
+    return this->message;
+}
 
 HttpRequest::~HttpRequest()
 {
-    if (url) free(url);
-    if (message) free(message);
+    if (url) {
+        free(url);
+        url = nullptr;
+    }
+    if (message) {
+        free(message);
+        url = nullptr;
+    }
 }

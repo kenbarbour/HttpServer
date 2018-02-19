@@ -17,11 +17,20 @@
 class HttpRequest
 {
     public:
-        HttpRequest(Stream& s)
-            :client(s), method(), url(), httpver(), headers(), message() {};
+        HttpRequest();
+        HttpRequest(Stream&);
         ~HttpRequest();
-        Stream& client;
-        void capture();
+        void capture(Stream&);
+        const char * setMethod(const char *);
+        const char * getMethod();
+        const char * setUrl(const char *);
+        const char * setUrl(const char *, size_t);
+        const char * getUrl();
+        const char * setHttpVer(const char *);
+        const char * getHttpVer();
+        const char * setMessage(const char *);
+        const char * setMessage(const char *, size_t);
+        const char * getMessage();
         char method [HTTPREQUEST_METHOD_SIZE];
         char * url;
         char httpver [HTTPREQUEST_HTTPVER_SIZE];
