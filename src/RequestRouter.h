@@ -2,6 +2,7 @@
 #include "Methods.h"
 #include "HttpRequest.h"
 #include "HttpResponse.h"
+#include "Methods.h"
 
 typedef struct Route
 {
@@ -20,5 +21,6 @@ class RequestRouter
     private:
         size_t num;
         bool urlMatches(const char * pattern, const char * url);
-        bool methodMatches(uint8_t pattern, const char * method);
+        bool methodMatches(uint8_t pattern, uint8_t method);
+        uint8_t allowedMethods(const char * url);
 };
