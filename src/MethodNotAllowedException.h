@@ -5,7 +5,8 @@
 class MethodNotAllowedException: public std::exception
 {
     public:
-        MethodNotAllowedException(uint8_t allowed)
-            : methodsAllowed(allowed) {};
+        MethodNotAllowedException(HttpRequest * request, uint8_t allowed)
+            : request(request), methodsAllowed(allowed) {};
+        HttpRequest * request;
         uint8_t methodsAllowed;
 };

@@ -21,10 +21,10 @@ const Route* RequestRouter::match(HttpRequest &request)
     }
 
     if (urlMatch) {
-        throw MethodNotAllowedException(allowedMethods);
+        throw MethodNotAllowedException(&request, allowedMethods);
     } 
 
-    throw NotFoundException();
+    throw NotFoundException(&request);
 
 }
 

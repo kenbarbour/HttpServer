@@ -5,6 +5,7 @@
 class NotFoundException: public std::exception
 {
     public:
-        NotFoundException() {}
-    
+        NotFoundException(HttpRequest * request)
+            :request(request) {};
+        HttpRequest * request; 
 };
