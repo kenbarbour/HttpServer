@@ -22,12 +22,31 @@ TEST_CASE("Get and set headers","[HttpHeaders]"){
     CHECK(headers.count() == 1);
 }
 
-TEST_CASE("Append headers","[HttpHeaders]"){
+TEST_CASE("Set headers again","[HttpHeaders]"){
     HttpHeaders headers;
     headers.set("foo","sushi");
     headers.set("foo","soy");
 
+    CHECK_THAT(headers.get("foo"), Equals("soy"));
+    CHECK(headers.count() == 1);
+}
+
+TEST_CASE("Append headers","[HttpHeaders]")
+{
+    HttpHeaders headers;
+    headers.set("foo","sushi");
+    headers.append("foo","soy");
+
     CHECK_THAT(headers.get("foo"), Equals("sushi, soy"));
+    CHECK(headers.count() == 1);
+}
+
+TEST_CASE("Append empty header behaves like set","[HttpHeaders]")
+{
+    HttpHeaders headers;
+    headers.append("foo","bar");
+    
+    CHECK_THAT(headers.get("foo"), Equals("bar"));
     CHECK(headers.count() == 1);
 }
 

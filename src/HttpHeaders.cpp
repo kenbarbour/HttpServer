@@ -13,7 +13,32 @@ HttpHeaders::HttpHeaders() : _n(0) {
     headers = (HttpHeaderNode*) malloc(sizeof(HttpHeaderNode) * HTTPHEADERS_SIZE);
 }
 
-void HttpHeaders::set(const char* name, const char* value) {
+void HttpHeaders::set(const char * name, const char * value)
+{
+    int name_len = strlen(name);
+    int value_len = strlen(value);
+
+    for (int i = 0; i < count(); i++) {
+        if (strcmp(name, headers[i].name) != 0)
+            continue;
+        headers[i].value = (char *) realloc(headers[i].value, value_len + 1);
+        strcpy(headers[i].value, value);
+        return;
+    }
+
+    // Grow headers if needed
+    if (_n && (_n % HTTPHEADERS_SIZE) == 0) {
+        headers = (HttpHeaderNode*) realloc(headers, sizeof(HttpHeaderNode) * HTTPHEADERS_SIZE * (_n / HTTPHEADERS_SIZE + 1));
+    }
+
+    headers[_n].name = (char *) malloc( name_len + 1);
+    headers[_n].value = (char *) malloc( value_len + 1);
+    strcpy(headers[_n].name, name);
+    strcpy(headers[_n].value, value);
+    _n++;
+}
+
+void HttpHeaders::append(const char* name, const char* value) {
 
     int name_len = strlen(name);
     int value_len = strlen(value);
@@ -23,7 +48,7 @@ void HttpHeaders::set(const char* name, const char* value) {
         if (strcmp(name, headers[i].name) != 0)
             continue;
         int old_value_len = strlen(headers[i].value);
-        headers[i].value = (char *) realloc(headers[i].value, old_value_len + value_len + 2);
+        headers[i].value = (char *) realloc(headers[i].value, old_value_len + value_len + 3);
         strcpy(headers[i].value+old_value_len, ", ");
         strcpy(headers[i].value+old_value_len+2, value);
         return;
@@ -35,8 +60,8 @@ void HttpHeaders::set(const char* name, const char* value) {
     }
 
     // create and store new node with name and value
-    headers[_n].name  = (char *) malloc(sizeof(char) * strlen(name));
-    headers[_n].value = (char *) malloc(sizeof(char) * strlen(value));
+    headers[_n].name  = (char *) malloc(name_len + 1);
+    headers[_n].value = (char *) malloc(value_len + 1);
     strcpy(headers[_n].name, name);
     strcpy(headers[_n].value, value);
     _n++;

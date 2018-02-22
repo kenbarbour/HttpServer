@@ -11,6 +11,7 @@ class HttpHeaders {
         HttpHeaders();
         ~HttpHeaders();
         void set(const char * , const char *);
+        void append(const char *, const char *);
         char* get(const char*);
         bool has(const char*);
         int count();
