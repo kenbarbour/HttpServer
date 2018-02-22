@@ -99,3 +99,11 @@ TEST_CASE("Test wrap string","[Buffer][read][write][string]")
     REQUIRE(buffer.availableToWrite() == 5);
 
 }
+
+TEST_CASE("Write string without length","[Buffer][write][string]")
+{
+    uint8_t ptr[5];
+    Buffer buffer(ptr, 5);
+
+    REQUIRE(buffer.write("Foo!") == 4);
+}

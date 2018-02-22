@@ -1,6 +1,4 @@
 #pragma once
-#include "stdint.h"
-#include "stdlib.h"
 
 #ifdef _TEST_
 #include "dummy/DummyStream.h"
@@ -12,12 +10,20 @@ class Buffer: public Stream
 {
     public:
         Buffer(uint8_t*, size_t);
-        virtual size_t availableToWrite();
-        virtual int available();
-        virtual size_t write(uint8_t);
-        virtual size_t write(uint8_t *, size_t);
-        virtual int read();
-        virtual int peek();
+        size_t availableToWrite();
+        int available();
+        size_t write(uint8_t);
+        size_t write(const uint8_t *, size_t);
+        size_t write(const char * buffer) {
+            return write((const uint8_t *)buffer, strlen(buffer));
+        }
+        size_t write(const char * buffer, size_t size) {
+            return write((const uint8_t *)buffer, size);
+        }
+        int read();
+        int peek();
+
+        virtual void flush();
     
     private:
         uint8_t * start;

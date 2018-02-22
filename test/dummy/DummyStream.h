@@ -1,7 +1,4 @@
 #pragma once
-#include "stdlib.h"
-#include "stdint.h"
-#include "string.h"
 #include "dummy/DummyPrint.h"
 
 class Stream: public Print

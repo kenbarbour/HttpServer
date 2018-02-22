@@ -23,7 +23,7 @@ size_t Buffer::write(uint8_t byte)
     return 1;
 }
 
-size_t Buffer::write(uint8_t * buff, size_t len)
+size_t Buffer::write(const uint8_t * buff, size_t len)
 {
     size_t avail = availableToWrite();
     size_t toWrite = (avail < len) ? avail : len;
@@ -49,4 +49,11 @@ int Buffer::peek()
     if (available() == 0) return 0;
     if (r_ptr >= start + size) r_ptr = start;
     return *(r_ptr);
+}
+
+void Buffer::flush()
+{
+    w_ptr = start;
+    r_ptr = start;
+    num = 0;
 }

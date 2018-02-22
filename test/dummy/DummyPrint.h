@@ -1,21 +1,23 @@
-#ifndef DUMMYPRINT_H
-#define DUMMYPRINT_H
+#pragma once
+#include "stdlib.h"
+#include "stdint.h"
+#include "string.h"
 
 class Print
 {
     public:
         Print() {}
         virtual size_t write(uint8_t) = 0;
-        virtual size_t write(const uint8_t* buffer, size_t size) {
-            size_t written;
-                for (int i = 0; i < size; i++)
-                    written += write(buffer[i]);
-            return written;
+        size_t write(const char * str) {
+            if (str == nullptr) return 0;
+            return write((const uint8_t *) str, strlen(str));
         }
-
-        size_t write(const char * buffer, size_t size) {
+        virtual size_t write(const uint8_t *buffer, size_t size);
+        size_t write(const char *buffer, size_t size) {
             return write((const uint8_t *)buffer, size);
         }
+        virtual int availableForWrite() { return 0; }
+
         virtual void flush() {}
 };
 
@@ -28,5 +30,3 @@ class DummyPrint: public Print
         char * buffer;
 };
 
-
-#endif // DUMMYPRINT_H
