@@ -3,12 +3,14 @@
 #include "HttpRequest.h"
 #include "HttpResponse.h"
 #include "Methods.h"
+#include "NotFoundException.h"
+#include "MethodNotAllowedException.h"
 
 typedef struct Route
 {
     uint8_t methods;
     const char * pattern;
-    //HttpResponse (*handler) (HttpRequest);
+    void (*handler) (HttpRequest&, HttpResponse&);
 } Route;
 
 class RequestRouter
