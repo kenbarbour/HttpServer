@@ -43,6 +43,13 @@ TEST_CASE("Test get/set url","[HttpRequest]")
     CHECK_THAT(req.getUrl(), Equals("/foo"));
 }
 
+TEST_CASE("Test get/set short url", "[HttpRequest]")
+{
+    HttpRequest req;
+    req.setUrl("/");
+    CHECK(strcmp(req.getUrl(),"/") == 0);
+}
+
 TEST_CASE("Test get/set message","[HttpRequest]")
 {
     HttpRequest req;

@@ -29,7 +29,7 @@ void HttpRequest::capture(Stream &client)
 
     // Read url until ' '
     for (i=0; client.peek() != ' '; i++) buffer[i] = (char) client.read();
-    setUrl(buffer, i+1);
+    setUrl(buffer, i);
     for (k=0; k <= i; k++) buffer[k] = '\0'; //reset buffer
 
     HTTPREQUEST_TRIM(client);   
@@ -114,8 +114,8 @@ const char * HttpRequest::getHttpVer()
 const char * HttpRequest::setUrl(const char * url, size_t n)
 {
     if (this->url) free(this->url);
-    this->url =  (char *) malloc(n);
-    strncpy(this->url, url, n);
+    this->url =  (char *) malloc(n + 1);
+    strncpy(this->url, url, n+1);
     return this->url;
 }
 
@@ -139,7 +139,7 @@ const char * HttpRequest::setMessage(const char * message)
 const char * HttpRequest::setMessage(const char * message, size_t n)
 {
     if (this->message) free(this->message);
-    this->message = (char *) malloc(n);
+    this->message = (char *) malloc(n + 1);
     message_length = n;
     strncpy(this->message, message, n+1);
     return this->message;
