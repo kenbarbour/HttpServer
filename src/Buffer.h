@@ -2,15 +2,22 @@
 #include "stdint.h"
 #include "stdlib.h"
 
-class Buffer
+#ifdef _TEST_
+#include "dummy/DummyStream.h"
+#else
+#include "Arduino.h"
+#endif
+
+class Buffer: public Stream
 {
     public:
         Buffer(uint8_t*, size_t);
-        size_t availableToWrite();
-        size_t available();
-        size_t write(uint8_t);
-        size_t write(uint8_t *, size_t);
-        uint8_t read();
+        virtual size_t availableToWrite();
+        virtual int available();
+        virtual size_t write(uint8_t);
+        virtual size_t write(uint8_t *, size_t);
+        virtual int read();
+        virtual int peek();
     
     private:
         uint8_t * start;

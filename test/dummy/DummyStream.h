@@ -2,8 +2,9 @@
 #include "stdlib.h"
 #include "stdint.h"
 #include "string.h"
+#include "dummy/DummyPrint.h"
 
-class Stream
+class Stream: public Print
 {
     public:
         virtual int available() = 0;

@@ -9,7 +9,7 @@ size_t Buffer::availableToWrite()
     return size - num;
 }
 
-size_t Buffer::available()
+int Buffer::available()
 {
     return num;
 }
@@ -36,10 +36,17 @@ size_t Buffer::write(uint8_t * buff, size_t len)
     return toWrite;
 }
 
-uint8_t Buffer::read()
+int Buffer::read()
 {
     if (available() == 0) return 0;
     if (r_ptr >= start + size) r_ptr = start;
     num--;
     return *(r_ptr++);
+}
+
+int Buffer::peek()
+{
+    if (available() == 0) return 0;
+    if (r_ptr >= start + size) r_ptr = start;
+    return *(r_ptr);
 }
