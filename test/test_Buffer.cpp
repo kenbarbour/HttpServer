@@ -1,6 +1,8 @@
 #include "catch.hpp"
 #include "Buffer.h"
 
+#include <iostream>
+
 TEST_CASE("Buffer Constructor","[Buffer][Constructor]")
 {
     uint8_t ptr[3];
@@ -120,4 +122,20 @@ TEST_CASE("Buffer is a Stream","[Buffer][Stream]")
 
     buffer->write("Foo");
 
+}
+
+TEST_CASE("Test flush","[Buffer]")
+{
+    uint8_t ptr[8];
+    Buffer buffer(ptr, 8);
+
+    buffer.write("Foo");
+    REQUIRE(buffer.available() == 3);
+    buffer.flush();
+    REQUIRE(buffer.available() == 0);
+    buffer.write("Bar");
+    REQUIRE(buffer.available() == 3);
+    REQUIRE(buffer.read() == 'B');
+    REQUIRE(buffer.read() == 'a');
+    REQUIRE(buffer.read() == 'r');
 }

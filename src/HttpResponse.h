@@ -8,7 +8,7 @@
 #include "Arduino.h"
 #endif
 
-class HttpResponse
+class HttpResponse: public Print
 {
     public:
         HttpResponse(Buffer&);
@@ -24,6 +24,9 @@ class HttpResponse
         const char * getReason();
         static const char * getDefaultReason(unsigned int);
         void send(Stream &client);
+        size_t write (uint8_t);
+        size_t write (uint8_t *, size_t);
+        using Print::write;
     private:
         Buffer * buffer;
         char * reason;

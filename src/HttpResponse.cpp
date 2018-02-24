@@ -88,6 +88,16 @@ const char * HttpResponse::getDefaultReason(unsigned int code)
     }
 }
 
+size_t HttpResponse::write(uint8_t data)
+{
+    return buffer->write(data);
+}
+
+size_t HttpResponse::write(uint8_t * data, size_t len)
+{
+    return buffer->write(data, len);
+}
+
 HttpResponse::~HttpResponse()
 {
     if (reason) free(reason);
