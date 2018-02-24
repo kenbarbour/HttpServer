@@ -1,5 +1,6 @@
 #pragma once
 #include "HttpHeaders.h"
+#include "Buffer.h"
 
 #ifdef _TEST_
 #include "Stream.h"
@@ -10,16 +11,20 @@
 class HttpResponse
 {
     public:
+        HttpResponse(Buffer&);
+        HttpResponse(Buffer&, unsigned int);
+        HttpResponse(Buffer&, unsigned int, const char *);
         HttpResponse();
         HttpResponse(unsigned int code);
         HttpResponse(unsigned int code, const char *);
         ~HttpResponse();
         unsigned int code;
-        char * reason;
         HttpHeaders headers;
-        Stream * message;
         const char * setReason(const char * reason);
         const char * getReason();
         static const char * getDefaultReason(unsigned int);
+        void send(Stream &client);
     private:
+        Buffer * buffer;
+        char * reason;
 };

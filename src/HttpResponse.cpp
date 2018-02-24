@@ -1,15 +1,22 @@
 #include "HttpResponse.h"
 
-HttpResponse::HttpResponse(): code(200) {
-    reason = nullptr;
+HttpResponse::HttpResponse(Buffer & buffer): buffer(&buffer), code(200), reason() {};
+
+HttpResponse::HttpResponse(Buffer & buffer, unsigned int code): buffer(&buffer), code(code), reason() {};
+
+HttpResponse::HttpResponse(Buffer & buffer, unsigned int code, const char * reason)
+    :buffer(&buffer), code(code), reason()
+{
+    setReason(reason);
 }
 
-HttpResponse::HttpResponse(unsigned int code): code(code) {
-    reason = nullptr;
-}
+HttpResponse::HttpResponse(): buffer(), code(200), reason() {};
 
-HttpResponse::HttpResponse(unsigned int code, const char * reason): code(code) {
-    this->reason = nullptr;
+HttpResponse::HttpResponse(unsigned int code): buffer(), code(code), reason() {}
+
+HttpResponse::HttpResponse(unsigned int code, const char * reason)
+    : buffer(), code(code), reason() 
+{
     setReason(reason);
 }
 

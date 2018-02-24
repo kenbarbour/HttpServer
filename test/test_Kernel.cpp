@@ -23,7 +23,6 @@ TEST_CASE("Kernel-like device","[Kernel]")
     Buffer responseBuffer((uint8_t *) responseData, 256);
     DummyStream client("GET / HTTP/1.1\r\nHost: localhost\r\n\r\n");
     HttpRequest request(client);
-    HttpResponse response;
-    response.message = &responseBuffer;
+    HttpResponse response(responseBuffer);
 }
 
