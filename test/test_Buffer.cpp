@@ -107,3 +107,17 @@ TEST_CASE("Write string without length","[Buffer][write][string]")
 
     REQUIRE(buffer.write("Foo!") == 4);
 }
+
+TEST_CASE("Buffer is a Stream","[Buffer][Stream]")
+{
+    uint8_t ptr[5];
+    Stream * buffer;
+    buffer = new Buffer(ptr, 5);
+
+    buffer->write('F');
+    REQUIRE(ptr[0] == 'F');
+    REQUIRE(buffer->read() == 'F');
+
+    buffer->write("Foo");
+
+}

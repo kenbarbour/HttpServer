@@ -1,6 +1,6 @@
 #include "RequestRouter.h"
 #include "catch.hpp"
-#include "dummy/DummyStream.h"
+#include "DummyStream.h"
 #include "NotFoundException.h"
 #include "MethodNotAllowedException.h"
 #include <iostream>

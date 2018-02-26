@@ -6,7 +6,7 @@
 #endif
 
 #ifdef _TEST_
-#include "dummy/DummyStream.h"
+#include "Stream.h"
 #else
 #include "Arduino.h"
 #endif

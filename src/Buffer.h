@@ -1,7 +1,7 @@
 #pragma once
 
 #ifdef _TEST_
-#include "dummy/DummyStream.h"
+#include "Stream.h"
 #else
 #include "Arduino.h"
 #endif
@@ -10,20 +10,13 @@ class Buffer: public Stream
 {
     public:
         Buffer(uint8_t*, size_t);
+        virtual size_t write(uint8_t);
         size_t availableToWrite();
         int available();
-        size_t write(uint8_t);
-        size_t write(const uint8_t *, size_t);
-        size_t write(const char * buffer) {
-            return write((const uint8_t *)buffer, strlen(buffer));
-        }
-        size_t write(const char * buffer, size_t size) {
-            return write((const uint8_t *)buffer, size);
-        }
-        int read();
         int peek();
-
+        int read();
         virtual void flush();
+        using Print::write;
     
     private:
         uint8_t * start;

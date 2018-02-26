@@ -3,6 +3,7 @@
 #include "HttpRequest.h"
 #include "HttpResponse.h"
 #include "Buffer.h"
+#include "DummyStream.h"
 
 void index(HttpRequest& request, HttpResponse& response)
 {

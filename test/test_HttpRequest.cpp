@@ -1,6 +1,7 @@
 #include "catch.hpp"
 #include "HttpRequest.h"
 #include <iostream>
+#include "DummyStream.h"
 
 using Catch::Matchers::Equals;
 

@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "dummy/DummyStream.h"
+#include "DummyStream.h"
 #include <iostream>
 
 TEST_CASE("DummyStream is availble","[DummyStream]")

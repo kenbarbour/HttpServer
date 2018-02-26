@@ -23,6 +23,7 @@ size_t Buffer::write(uint8_t byte)
     return 1;
 }
 
+/*
 size_t Buffer::write(const uint8_t * buff, size_t len)
 {
     size_t avail = availableToWrite();
@@ -35,6 +36,7 @@ size_t Buffer::write(const uint8_t * buff, size_t len)
 
     return toWrite;
 }
+*/
 
 int Buffer::read()
 {
