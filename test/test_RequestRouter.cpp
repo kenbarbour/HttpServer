@@ -92,3 +92,15 @@ TEST_CASE("Method not allowed", "[RequestRouter]")
         CHECK(e.methodsAllowed == GET);    
     }
 }
+
+TEST_CASE("Url Wildcards","[RequestRouter]")
+{
+
+    CHECK(RequestRouter::urlMatches("/foo","/foo") == true);
+    CHECK(RequestRouter::urlMatches("/foo/","/foo") == false);
+    CHECK(RequestRouter::urlMatches("/*","/foo") == true);
+    CHECK(RequestRouter::urlMatches("/*/","/foo") == false);
+    CHECK(RequestRouter::urlMatches("/foo/*/bar","/foo/baz/bar") == true);
+    CHECK(RequestRouter::urlMatches("*","foo") == true);
+    
+}

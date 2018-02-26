@@ -30,7 +30,25 @@ const Route* RequestRouter::match(HttpRequest &request)
 
 bool RequestRouter::urlMatches(const char * pattern, const char * url)
 {
-    return (strcmp(pattern, url) == 0);
+    unsigned int u = 0;
+    unsigned int p = 0;
+    
+    do {
+        if (pattern[p] == url[u] && url[u] == '\0')
+            return true;
+
+        if (pattern[p] == '*') {
+            if (url[u] == '/') p++;
+            else if (url[u] == '\0') p++;
+            else u++;
+        } else {
+            if (pattern[p++] == url[u++]) continue;
+            return false;
+        }
+
+    } while (true);
+
+    return true;
 }
 
 bool RequestRouter::methodMatches(uint8_t pattern, uint8_t method)

@@ -20,9 +20,9 @@ class RequestRouter
         ~RequestRouter();
         const Route* match(HttpRequest &request);
         const Route* routes;
+        static bool urlMatches(const char * pattern, const char * url);
     private:
         size_t num;
-        bool urlMatches(const char * pattern, const char * url);
         bool methodMatches(uint8_t pattern, uint8_t method);
         uint8_t allowedMethods(const char * url);
 };
