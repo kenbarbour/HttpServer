@@ -8,6 +8,9 @@ class RouteDispatcher
     public:
         RouteDispatcher(RequestRouter&);
         void handle(HttpRequest& , HttpResponse&);
+    protected:
+        void handleNotFoundError(HttpRequest&, HttpResponse&);
+        void handleMethodNotAllowedError(HttpRequest&, HttpResponse&);
     private:
         RequestRouter& router;
 };

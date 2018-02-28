@@ -1,8 +1,6 @@
 #include "RequestRouter.h"
 #include "catch.hpp"
 #include "DummyStream.h"
-#include "NotFoundException.h"
-#include "MethodNotAllowedException.h"
 #include <iostream>
 #include <bitset>
 
@@ -70,7 +68,9 @@ TEST_CASE("Not found","[RequestRouter]")
     DummyStream client("GET /foo HTTP/1.1\r\nHost: localhost\r\n\r\n");
     HttpRequest request(client);
 
-    REQUIRE_THROWS_AS(match = router.match(request), NotFoundException);
+    match = router.match(request);
+    CHECK(match == nullptr);
+    CHECK(router.getRouteError() == E_NOT_FOUND);
 }
 
 TEST_CASE("Method not allowed", "[RequestRouter]")
@@ -83,14 +83,10 @@ TEST_CASE("Method not allowed", "[RequestRouter]")
 
     DummyStream client("PUT / HTTP/1.1\r\nHost: localhost\r\n\r\nfoo");
     HttpRequest request(client);
-
-    REQUIRE_THROWS_AS(match = router.match(request), MethodNotAllowedException);
     
-    try {
-        router.match(request);
-    } catch (MethodNotAllowedException &e) {
-        CHECK(e.methodsAllowed == GET);    
-    }
+    match = router.match(request);
+    CHECK(match == nullptr);
+    CHECK(router.getRouteError() == E_METHOD_NOT_ALLOWED);
 }
 
 TEST_CASE("Url Wildcards","[RequestRouter]")

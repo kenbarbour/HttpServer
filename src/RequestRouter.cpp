@@ -1,9 +1,7 @@
 #include "RequestRouter.h"
-#include "MethodNotAllowedException.h"
-#include "NotFoundException.h"
 #include <string.h>
 
-RequestRouter::RequestRouter(const Route * routes, size_t num): routes(routes), num(num) {};
+RequestRouter::RequestRouter(const Route * routes, size_t num): routes(routes), num(num), route_error(E_SUCCESS) {};
 
 const Route* RequestRouter::match(HttpRequest &request)
 {
@@ -15,16 +13,20 @@ const Route* RequestRouter::match(HttpRequest &request)
         if (urlMatches(routes[i].pattern, request.getUrl())) {
             urlMatch = true;
             allowedMethods = allowedMethods | routes[i].methods;
-            if (methodMatches(routes[i].methods, method))
+            if (methodMatches(routes[i].methods, method)) {
+                clearRouteError();
                 return &(routes[i]);
+            }
         }
     }
 
     if (urlMatch) {
-        throw MethodNotAllowedException(&request, allowedMethods);
+        setRouteError(E_METHOD_NOT_ALLOWED);
+        return nullptr;
     } 
 
-    throw NotFoundException(&request);
+    setRouteError(E_NOT_FOUND);
+    return nullptr;
 
 }
 
