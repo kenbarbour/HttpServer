@@ -1,8 +1,6 @@
 #include "HttpHeaders.h"
 #include "stdlib.h"
 #include "string.h"
-#include <iostream>
-
 
 #ifndef HTTPHEADERS_SIZE
 #define HTTPHEADERS_SIZE 20
