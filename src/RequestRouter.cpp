@@ -7,12 +7,12 @@ const Route* RequestRouter::match(HttpRequest &request)
 {
     bool urlMatch = false; // if true
     uint8_t method = method_str(request.getMethod());
-    uint8_t allowedMethods = 0;
+    allowed_methods = 0;
 
     for (int i = 0; i < num; i++) {
         if (urlMatches(routes[i].pattern, request.getUrl())) {
             urlMatch = true;
-            allowedMethods = allowedMethods | routes[i].methods;
+            allowed_methods = allowed_methods | routes[i].methods;
             if (methodMatches(routes[i].methods, method)) {
                 clearRouteError();
                 return &(routes[i]);

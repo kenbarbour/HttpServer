@@ -28,11 +28,13 @@ class RequestRouter
         static bool urlMatches(const char * pattern, const char * url);
         RouteError getRouteError() { return route_error; }
         void clearRouteError() { setRouteError(E_SUCCESS); }
+        uint8_t lastAllowedMethods() { return allowed_methods; }
     protected:
         void setRouteError(RouteError err) { route_error = err; }
     private:
         size_t num;
         RouteError route_error;
+        uint8_t allowed_methods;
         bool methodMatches(uint8_t pattern, uint8_t method);
         uint8_t allowedMethods(const char * url);
 };

@@ -87,6 +87,7 @@ TEST_CASE("Method not allowed", "[RequestRouter]")
     match = router.match(request);
     CHECK(match == nullptr);
     CHECK(router.getRouteError() == E_METHOD_NOT_ALLOWED);
+    CHECK(router.lastAllowedMethods() == GET);
 }
 
 TEST_CASE("Url Wildcards","[RequestRouter]")
