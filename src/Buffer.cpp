@@ -4,7 +4,7 @@ Buffer::Buffer(uint8_t * ptr, size_t len)
     : start(ptr), size(len), num(0), w_ptr(ptr), r_ptr(ptr)
 {}
 
-size_t Buffer::availableToWrite()
+int Buffer::availableForWrite()
 {
     return size - num;
 }
@@ -16,7 +16,7 @@ int Buffer::available()
 
 size_t Buffer::write(uint8_t byte)
 {
-    if (availableToWrite() == 0) return 0;
+    if (availableForWrite() == 0) return 0;
     if (w_ptr >= start + size) w_ptr = start;
     *(w_ptr++) = byte;
     num++;

@@ -11,7 +11,7 @@ class Buffer: public Stream
     public:
         Buffer(uint8_t*, size_t);
         virtual size_t write(uint8_t);
-        size_t availableToWrite();
+        int availableForWrite();
         int available();
         int peek();
         int read();

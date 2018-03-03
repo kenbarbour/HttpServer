@@ -9,7 +9,7 @@ TEST_CASE("Buffer Constructor","[Buffer][Constructor]")
     Buffer buffer(ptr, 3);
 
     CHECK(buffer.available() == 0);
-    CHECK(buffer.availableToWrite() == 3);
+    CHECK(buffer.availableForWrite() == 3);
 }
 
 TEST_CASE("Test write byte","[Buffer][write][byte]")
@@ -47,22 +47,22 @@ TEST_CASE("Test wrap byte","[Buffer][write][read][byte]")
     for (int i = 0; i < 10; i++) {
         // buffer is empty
         REQUIRE(buffer.available() == 0);
-        REQUIRE(buffer.availableToWrite() == 3);
+        REQUIRE(buffer.availableForWrite() == 3);
 
         // write 1 byte
         buffer.write(i);
         REQUIRE(buffer.available() == 1);
-        REQUIRE(buffer.availableToWrite() == 2);
+        REQUIRE(buffer.availableForWrite() == 2);
 
         // write 2nd byte
         buffer.write(i+1);
         REQUIRE(buffer.available() == 2);
-        REQUIRE(buffer.availableToWrite() == 1);
+        REQUIRE(buffer.availableForWrite() == 1);
 
         // write 3rd byte (now full)
         buffer.write(i+2);
         REQUIRE(buffer.available() == 3);
-        REQUIRE(buffer.availableToWrite() == 0);
+        REQUIRE(buffer.availableForWrite() == 0);
 
         // read bytes in order
         CHECK(buffer.read() == i);
@@ -84,21 +84,21 @@ TEST_CASE("Test wrap string","[Buffer][read][write][string]")
 
     REQUIRE(buffer.write((uint8_t *) str, 3) == 3);
     REQUIRE(buffer.available() == 3);
-    REQUIRE(buffer.availableToWrite() == 2);
+    REQUIRE(buffer.availableForWrite() == 2);
     REQUIRE(buffer.read() == 'f');
     REQUIRE(buffer.read() == 'o');
     REQUIRE(buffer.read() == 'o');
     REQUIRE(buffer.available() == 0);
-    REQUIRE(buffer.availableToWrite() == 5);
+    REQUIRE(buffer.availableForWrite() == 5);
 
     REQUIRE(buffer.write((uint8_t *) str2, 3) == 3);
     REQUIRE(buffer.available() == 3);
-    REQUIRE(buffer.availableToWrite() == 2);
+    REQUIRE(buffer.availableForWrite() == 2);
     REQUIRE(buffer.read() == 'b');
     REQUIRE(buffer.read() == 'a');
     REQUIRE(buffer.read() == 'r');
     REQUIRE(buffer.available() == 0);
-    REQUIRE(buffer.availableToWrite() == 5);
+    REQUIRE(buffer.availableForWrite() == 5);
 
 }
 
