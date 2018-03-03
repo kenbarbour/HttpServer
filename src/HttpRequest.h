@@ -1,15 +1,19 @@
 #pragma once
 #include "HttpHeaders.h"
 
+#ifndef HTTPREQUEST_TIMEOUT
+#define HTTPREQUEST_TIMEOUT 1000
+#endif
+
 #ifndef HTTPREQUEST_MAX_MESSAGE_SIZE
 #define HTTPREQUEST_MAX_MESSAGE_SIZE 512
 #endif
 
 #ifdef _TEST_
 #include "Stream.h"
-#else
-#include "Arduino.h"
 #endif
+
+#include "Arduino.h"
 
 #define HTTPREQUEST_METHOD_SIZE 8
 #define HTTPREQUEST_HTTPVER_SIZE 9
@@ -37,4 +41,8 @@ class HttpRequest
         HttpHeaders headers;
         long int message_length;
         char * message;
+    protected:
+        char client_read(Stream&);
+        char client_peek(Stream&);
+        unsigned long _timeout_millis;
 };
