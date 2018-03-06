@@ -10,12 +10,14 @@ class WiFiClient : public Stream
         WiFiClient(const char * content): buffer(_buff, WIFICLIENT_BUFFER), _status(1) {
             buffer.write(content);
         }
-        WiFiClient(): buffer(_buff, WIFICLIENT_BUFFER), _status(1) {}
+        WiFiClient(): buffer(_buff, WIFICLIENT_BUFFER), _status(0) {}
 
         uint8_t _status;
 
         void stop() { _status=0; }
-        uint8_t connected() { return _status; }
+        const uint8_t connected() const { return _status; }
+        
+        operator bool() const { return connected(); }
 
         int available() { return buffer.available(); }
         int read() { return buffer.read(); }
