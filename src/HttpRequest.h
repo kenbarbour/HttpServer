@@ -33,16 +33,17 @@ class HttpRequest
         const char * setHttpVer(const char *);
         const char * getHttpVer();
         const char * setMessage(const char *);
-        const char * setMessage(const char *, size_t);
+        const char * setMessage(const char *, unsigned int);
         const char * getMessage();
+        unsigned int getMessageLength() { return message_length; };
         char method [HTTPREQUEST_METHOD_SIZE];
         char * url;
         char httpver [HTTPREQUEST_HTTPVER_SIZE];
         HttpHeaders headers;
-        long int message_length;
-        char * message;
     protected:
         char client_read(Stream&);
+        long int message_length;
+        char * message;
         char client_peek(Stream&);
         unsigned long _timeout_millis;
 };

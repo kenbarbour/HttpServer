@@ -30,3 +30,15 @@ TEST_CASE("Test GET","[RequestParser]")
     CHECK(parser.parse());
     CHECK(!parser.error());
 }
+TEST_CASE("Test message data","[RequestParser]")
+{
+    uint8_t _buff[256] = {};
+    Buffer client(_buff, 256);
+    HttpRequest request;
+    RequestParser parser(request, client);
+
+    client.write("POST /foo HTTP/1.1\r\nHost: localhost\r\nContent-Length: 10\r\n\r\n1234567890");
+    CHECK(parser.parse());
+    CHECK(request.getMessageLength() == 10);
+    CHECK_THAT(request.getMessage(), Equals("1234567890"));
+}

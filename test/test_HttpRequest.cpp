@@ -27,7 +27,7 @@ TEST_CASE("Capture a complicated HTTP Request","[HttpRequest]") {
 
     CHECK_THAT(req.url, Equals("/foo"));
     CHECK_THAT(req.headers.get("Content-Length"), Equals("11"));
-    CHECK_THAT(req.message, Equals("foo=bar&baz"));
+    CHECK_THAT(req.getMessage(), Equals("foo=bar&baz"));
 }
 
 TEST_CASE("Test get/set method","[HttpRequest]")
@@ -56,7 +56,7 @@ TEST_CASE("Test get/set message","[HttpRequest]")
     HttpRequest req;
     req.setMessage("FooBarBaz");
     CHECK_THAT(req.getMessage(), Equals("FooBarBaz"));
-    CHECK(req.message_length == 9);
+    CHECK(req.getMessageLength() == 9);
 }
 
 TEST_CASE("HttpRequest reassignment", "[HttpRequest]")

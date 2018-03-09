@@ -137,7 +137,7 @@ const char * HttpRequest::setMessage(const char * message)
     return this->setMessage(message, len);
 }
 
-const char * HttpRequest::setMessage(const char * message, size_t n)
+const char * HttpRequest::setMessage(const char * message, unsigned int n)
 {
     if (this->message) free(this->message);
     this->message = (char *) malloc(n + 1);
