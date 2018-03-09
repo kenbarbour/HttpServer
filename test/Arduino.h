@@ -4,3 +4,5 @@
 unsigned long millis();
 
 void delay(unsigned long);
+
+void yield();

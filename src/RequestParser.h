@@ -1,6 +1,7 @@
 #pragma once
 #include "HttpRequest.h"
 #include "Arduino.h"
+#include "Stream.h"
 
 #ifndef REQUESTPARSER_BUFFER
 #define REQUESTPARSER_BUFFER 512
