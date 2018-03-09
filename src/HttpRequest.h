@@ -9,10 +9,6 @@
 #define HTTPREQUEST_MAX_MESSAGE_SIZE 512
 #endif
 
-#ifdef _TEST_
-#include "Stream.h"
-#endif
-
 #include "Arduino.h"
 
 #define HTTPREQUEST_METHOD_SIZE 8
@@ -22,9 +18,7 @@ class HttpRequest
 {
     public:
         HttpRequest();
-        HttpRequest(Stream&);
         ~HttpRequest();
-        void capture(Stream&);
         const char * setMethod(const char *);
         const char * getMethod();
         const char * setUrl(const char *);
@@ -41,9 +35,6 @@ class HttpRequest
         char httpver [HTTPREQUEST_HTTPVER_SIZE];
         HttpHeaders headers;
     protected:
-        char client_read(Stream&);
         long int message_length;
         char * message;
-        char client_peek(Stream&);
-        unsigned long _timeout_millis;
 };

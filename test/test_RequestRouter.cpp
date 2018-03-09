@@ -39,20 +39,22 @@ TEST_CASE("Match","[RequestRouter]")
     RequestRouter router(routes, 3 );
     const Route * match;
 
-    DummyStream client("POST /bar HTTP/1.1\r\nHost: localhost\r\n\r\nfoobar");
-    DummyStream client2("GET /baz HTTP/1.1\r\nHost: localhost\r\n\r\nfoobar");
-    DummyStream client3("POST /baz HTTP/1.1\r\nHost: localhost\r\n\r\nbaaz");    
+    HttpRequest request;
+    HttpRequest request2;
+    HttpRequest request3;
 
-    HttpRequest request(client);
-    HttpRequest request2(client2);
-    HttpRequest request3(client3);
-
+    request.setMethod("POST");
+    request.setUrl("/bar");
     match = router.match(request);
     CHECK(match == &(routes[1]));
 
+    request2.setMethod("GET");
+    request2.setUrl("/baz");
     match = router.match(request2);
     CHECK(match == &(routes[2]));
 
+    request3.setMethod("POST");
+    request3.setUrl("/baz");
     match = router.match(request3);
     CHECK(match == &(routes[2]));
 }
@@ -65,8 +67,9 @@ TEST_CASE("Not found","[RequestRouter]")
     RequestRouter router(routes, 1 );
     const Route * match;
 
-    DummyStream client("GET /foo HTTP/1.1\r\nHost: localhost\r\n\r\n");
-    HttpRequest request(client);
+    HttpRequest request;
+    request.setMethod("GET");
+    request.setUrl("/foo");
 
     match = router.match(request);
     CHECK(match == nullptr);
@@ -81,8 +84,9 @@ TEST_CASE("Method not allowed", "[RequestRouter]")
     RequestRouter router(routes, 1);
     const Route * match;
 
-    DummyStream client("PUT / HTTP/1.1\r\nHost: localhost\r\n\r\nfoo");
-    HttpRequest request(client);
+    HttpRequest request;
+    request.setMethod("PUT");
+    request.setUrl("/");
     
     match = router.match(request);
     CHECK(match == nullptr);
@@ -95,6 +99,7 @@ TEST_CASE("Url Wildcards","[RequestRouter]")
 
     CHECK(RequestRouter::urlMatches("/foo","/foo") == true);
     CHECK(RequestRouter::urlMatches("/foo/","/foo") == false);
+    CHECK(RequestRouter::urlMatches("/foo/","/foo/") == true);
     CHECK(RequestRouter::urlMatches("/*","/foo") == true);
     CHECK(RequestRouter::urlMatches("/*/","/foo") == false);
     CHECK(RequestRouter::urlMatches("/foo/*/bar","/foo/baz/bar") == true);
