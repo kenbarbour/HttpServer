@@ -52,9 +52,15 @@ unsigned int HttpHeaders::length()
     return len;
 }
 
-void HttpHeaders::write(char * buff, int size)
+size_t HttpHeaders::printTo(Print& client) const
 {
- // TODO: implement
+    size_t len = 0;
+    for (int i = 0; i < _num; i++) {
+        len += client.print(_headers[i].name);
+        len += client.print(": ");
+        len += client.println(_headers[i].value);
+    }
+    return len;
 }
 
 int HttpHeaders::indexof( const char * name)

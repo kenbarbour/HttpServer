@@ -1,5 +1,6 @@
 #include "catch.hpp"
 #include "HttpHeaders.h"
+#include "Buffer.h"
 #include "string.h"
 
 using Catch::Matchers::Equals;
@@ -88,4 +89,20 @@ TEST_CASE("Copy constructor", "[HttpHeaders]")
     orig.set("Bux","foo");
     CHECK(!copy.has("Bux"));
     CHECK(copy.count() == 2);
+}
+
+TEST_CASE("HttpHeaders printTo", "[HttpHeaders]")
+{
+    HttpHeaders h;
+    uint8_t buff[100];
+    Buffer buffer(buff, 100);
+
+    buffer.print(h);
+    CHECK_THAT((char *) buff, Equals(""));
+    buffer.flush();
+
+    h.set("Foo","Bar");
+    h.set("Bar","baz");
+    buffer.print(h);
+    CHECK_THAT((char *) buff, Equals("Foo: Bar\r\nBar: baz\r\n"));
 }

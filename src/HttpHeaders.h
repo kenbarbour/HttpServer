@@ -1,4 +1,6 @@
 #pragma once
+#include "Print.h"
+#include "Printable.h"
 
 #ifndef HTTPHEADERS_BUFFER
 #define HTTPHEADERS_BUFFER 256
@@ -16,7 +18,7 @@ struct HttpHeaderField {
     char value[HTTPHEADERS_VALUE_SZ];
 };
 
-class HttpHeaders {
+class HttpHeaders: public Printable {
     public:
         HttpHeaders():
             _headers(),
@@ -29,7 +31,7 @@ class HttpHeaders {
         bool has(const char*);
         unsigned int count();
         unsigned int length();
-        void write(char *, int);
+        virtual size_t printTo(Print&) const;
 
     private:
         HttpHeaderField _headers[HTTPHEADERS_NUM];
