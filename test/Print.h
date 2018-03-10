@@ -2,6 +2,7 @@
 #include "stdlib.h"
 #include "stdint.h"
 #include "string.h"
+#include "Printable.h"
 
 class Print
 {
@@ -19,4 +20,17 @@ class Print
         virtual int availableForWrite() { return 0; }
 
         virtual void flush() {}
+
+        size_t print(const char* str) { return write(str); }
+        size_t print(char c ) { return write(c); }
+        size_t print(int);
+        size_t print(const Printable&);
+
+        size_t println(void);
+        size_t println(const char* );
+        size_t println(char);
+        size_t println(int);
+        size_t println(const Printable&);
+
+        size_t printNumber(unsigned long n, uint8_t base);
 };
