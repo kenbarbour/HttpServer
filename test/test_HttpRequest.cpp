@@ -58,3 +58,13 @@ TEST_CASE("Test get/set message","[HttpRequest]")
     CHECK_THAT(req.getMessage(), Equals("FooBarBaz"));
     CHECK(req.message_length == 9);
 }
+
+TEST_CASE("HttpRequest reassignment", "[HttpRequest]")
+{
+    HttpRequest req;
+    req.setUrl("/");
+    req.setMethod("GET");
+
+    req = HttpRequest();
+    CHECK(req.getUrl() == nullptr);
+}

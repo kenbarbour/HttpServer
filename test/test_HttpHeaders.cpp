@@ -70,3 +70,22 @@ TEST_CASE("Header name is case insensitive","[HttpHeaders]") {
 
     CHECK(headers.has("foo"));
 }
+
+TEST_CASE("Copy constructor", "[HttpHeaders]")
+{
+    HttpHeaders orig;
+    orig.set("Foo","bar");
+    orig.append("Foo","baz");
+    orig.set("Bar","qux");
+    REQUIRE(orig.count() == 2);
+
+    HttpHeaders copy(orig);
+    CHECK(copy.has("Foo"));
+    CHECK_THAT(copy.get("Foo"), Equals("bar, baz"));
+    CHECK_THAT(copy.get("Bar"), Equals("qux"));
+    CHECK(copy.count() == 2);
+
+    orig.set("Bux","foo");
+    CHECK(!copy.has("Bux"));
+    CHECK(copy.count() == 2);
+}
