@@ -18,7 +18,7 @@ TEST_CASE("Get and set headers","[HttpHeaders]"){
 
     // Set 'foo: bar' and check it
     headers.set("foo","bar");
-    CHECK(strcmp(headers.get("foo"),"bar") == 0);
+    CHECK_THAT(headers.get("foo"), Equals("bar"));
     CHECK(headers.count() == 1);
 }
 
@@ -50,24 +50,23 @@ TEST_CASE("Append empty header behaves like set","[HttpHeaders]")
     CHECK(headers.count() == 1);
 }
 
-TEST_CASE("Force headers to grow","[HttpHeaders]") {
+TEST_CASE("Fill headers","[HttpHeaders]") {
     HttpHeaders headers;
-    char name[8] = "";
+    char name[HTTPHEADERS_NAME_SZ] = "";
     strcpy(name, "header");
    
-    for (int i = 0; i < 26; i++) {
+    for (int i = 0; i < HTTPHEADERS_NUM; i++) {
         name[6] = 0x41 + i;
         headers.set(name,"Foo");
-        REQUIRE(strcmp(headers.get(name),"Foo") == 0);
+        REQUIRE_THAT(headers.get(name), Equals("Foo"));
         CHECK(headers.count() == (i+1) );
     } 
 }
 
-/* TODO: enable this test case while fixing header case sensitivity
 TEST_CASE("Header name is case insensitive","[HttpHeaders]") {
     HttpHeaders headers;
 
     headers.set("Foo","bar");
 
     CHECK(headers.has("foo"));
-}*/
+}

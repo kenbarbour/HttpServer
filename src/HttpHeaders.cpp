@@ -2,110 +2,79 @@
 #include "stdlib.h"
 #include "string.h"
 
-#ifndef HTTPHEADERS_SIZE
-#define HTTPHEADERS_SIZE 20
-#endif
-
-
-HttpHeaders::HttpHeaders() : _n(0) {
-    headers = (HttpHeaderNode*) malloc(sizeof(HttpHeaderNode) * HTTPHEADERS_SIZE);
-}
-
 void HttpHeaders::set(const char * name, const char * value)
 {
-    int name_len = strlen(name);
-    int value_len = strlen(value);
-
-    for (int i = 0; i < count(); i++) {
-        if (strcmp(name, headers[i].name) != 0)
-            continue;
-        headers[i].value = (char *) realloc(headers[i].value, value_len + 1);
-        strcpy(headers[i].value, value);
-        return;
+    int i = indexof(name);
+    if (i == -1) {
+        i = _num++;
+        strncpy(_headers[i].name, name, HTTPHEADERS_NAME_SZ -1);
     }
-
-    // Grow headers if needed
-    if (_n && (_n % HTTPHEADERS_SIZE) == 0) {
-        headers = (HttpHeaderNode*) realloc(headers, sizeof(HttpHeaderNode) * HTTPHEADERS_SIZE * (_n / HTTPHEADERS_SIZE + 1));
-    }
-
-    headers[_n].name = (char *) malloc( name_len + 1);
-    headers[_n].value = (char *) malloc( value_len + 1);
-    strcpy(headers[_n].name, name);
-    strcpy(headers[_n].value, value);
-    _n++;
+    strncpy(_headers[i].value, value, HTTPHEADERS_VALUE_SZ -1);
 }
 
-void HttpHeaders::append(const char* name, const char* value) {
-
-    int name_len = strlen(name);
-    int value_len = strlen(value);
-
-    // search for existing node with name and append value
-    for (int i = 0; i < count(); i++) {
-        if (strcmp(name, headers[i].name) != 0)
-            continue;
-        int old_value_len = strlen(headers[i].value);
-        headers[i].value = (char *) realloc(headers[i].value, old_value_len + value_len + 3);
-        strcpy(headers[i].value+old_value_len, ", ");
-        strcpy(headers[i].value+old_value_len+2, value);
-        return;
-    }
-
-    // Grow headers if needed
-    if (_n && (_n % HTTPHEADERS_SIZE) == 0) {
-        headers = (HttpHeaderNode*) realloc(headers, sizeof(HttpHeaderNode) * HTTPHEADERS_SIZE * (_n / HTTPHEADERS_SIZE + 1));
-    }
-
-    // create and store new node with name and value
-    headers[_n].name  = (char *) malloc(name_len + 1);
-    headers[_n].value = (char *) malloc(value_len + 1);
-    strcpy(headers[_n].name, name);
-    strcpy(headers[_n].value, value);
-    _n++;
-}
-
-char* HttpHeaders::get(const char* name)
+void HttpHeaders::append(const char * name, const char * value)
 {
-    for (int i = 0; i < count(); i++) {
-        if (strcmp(name, headers[i].name) == 0)
-            return headers[i].value;
-    }
-    return nullptr;
+    int i = indexof(name);
+    if (i == -1) return set(name, value);
+
+    int val_len = strlen(_headers[i].value);
+    if (val_len == HTTPHEADERS_VALUE_SZ - 3) return;
+    _headers[i].value[val_len++] = ',';
+    _headers[i].value[val_len++] = ' ';
+    strncpy(_headers[i].value + val_len, value, HTTPHEADERS_VALUE_SZ - val_len - 1);
+}
+
+char* HttpHeaders::get(const char * name) // TODO make const
+{
+    int i = indexof(name);
+    if (i == -1) return nullptr;
+    return _headers[i].value;
 }
 
 bool HttpHeaders::has(const char* name)
 {
-    for (int i = 0; i < count(); i++) {
-        if (strcmp(name, headers[i].name) == 0)
-            return true;
-    }
-    return false;
+    return (indexof(name) != -1);
 }
 
-int HttpHeaders::count()
+unsigned int HttpHeaders::count()
 {
-    return _n;
+    return _num;
 }
 
-int HttpHeaders::length()
+unsigned int HttpHeaders::length()
 {
-    int length = 0;
-    for (int i = 0; i < count(); i++) {
-        length += strlen(headers[i].name);
-        length += strlen(headers[i].value);
-        length += 4; // add ': ' and '\r\n'
+    unsigned int len = 0;
+    for (int i = 0; i < _num; i++) {
+        len += strlen(_headers[i].name);
+        len += strlen(_headers[i].value);
     }
-    return length;
+    len += 2*_num; // count the ': ' between name and value
+    return len;
 }
 
-HttpHeaders::~HttpHeaders() {
-    for (int i = 0; i < count(); i++) {
-        free(headers[i].name);
-        free(headers[i].value);
+void HttpHeaders::write(char * buff, int size)
+{
+ // TODO: implement
+}
+
+int HttpHeaders::indexof( const char * name)
+{
+    for (int i = 0; i < _num; i++) {
+        if (names_match(name, _headers[i].name)) return i;
     }
-    if (headers) {
-        free(headers);
-        headers = nullptr;
+    return -1;
+}
+
+bool HttpHeaders::names_match(const char * a, const char * b)
+{
+    char ac,bc;
+    for (int i = 0; ac=a[i]; i++) {
+        bc = b[i];
+        if (ac == bc) continue;
+        if (ac > 96 && ac < 123) ac -= 32;
+        if (bc > 96 && bc < 123) bc -= 32;
+        if (ac != bc) return false;
     }
+
+    return true;
 }
