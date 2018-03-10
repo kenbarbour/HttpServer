@@ -30,7 +30,7 @@ const char * HttpResponse::setReason(const char * reason)
     return this->reason;
 }
 
-const char * HttpResponse::getReason()
+const char * HttpResponse::getReason() const
 {
     if (this->reason) return this->reason;
     return HttpResponse::getDefaultReason(code);
@@ -96,6 +96,18 @@ size_t HttpResponse::write(uint8_t data)
 size_t HttpResponse::write(uint8_t * data, size_t len)
 {
     return buffer->write(data, len);
+}
+
+size_t HttpResponse::printTo(Print& client) const
+{
+    size_t len = 0;
+    len += client.print((int) code);
+    len += client.print(' ');
+    len += client.println(getReason());
+    len += client.println(headers);
+    for (size_t i = buffer->available(); i > 0; i--)
+        len += client.print((char)buffer->read());
+    return len;
 }
 
 HttpResponse::~HttpResponse()

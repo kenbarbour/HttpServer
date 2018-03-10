@@ -8,7 +8,10 @@
 #include "Arduino.h"
 #endif
 
-class HttpResponse: public Print
+#include "Print.h"
+#include "Printable.h"
+
+class HttpResponse: public Print, public Printable
 {
     public:
         HttpResponse(Buffer&);
@@ -21,12 +24,14 @@ class HttpResponse: public Print
         unsigned int code;
         HttpHeaders headers;
         const char * setReason(const char * reason);
-        const char * getReason();
+        const char * getReason() const;
         static const char * getDefaultReason(unsigned int);
         void send(Stream &client);
         size_t write (uint8_t);
         size_t write (uint8_t *, size_t);
         using Print::write;
+
+        size_t printTo(Print&) const;
     private:
         Buffer * buffer;
         char * reason;
