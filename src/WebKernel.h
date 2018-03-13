@@ -7,6 +7,8 @@
 
 #define WEBKERNEL_MAX_WAIT 1000
 
+#define WEBKERNEL_RESPONSE_SIZE 1024
+
 enum WebKernelState {
     S_IDLE,
     S_RECEIVING,
@@ -23,7 +25,8 @@ class WebKernel
             _router(routes, num),
             _state(S_IDLE),
             _dispatcher(_router),
-            _parser(_request, _client)
+            _parser(_request, _client),
+            _resp_buffer(_resp_data, WEBKERNEL_RESPONSE_SIZE)
             {};
         void begin() { _server.begin(); }
         void handleClients();
@@ -42,4 +45,7 @@ class WebKernel
         RouteDispatcher _dispatcher;
         WebKernelState _state;
         unsigned long int _stateChange;
+
+        uint8_t _resp_data[WEBKERNEL_RESPONSE_SIZE];
+        Buffer _resp_buffer;
 };

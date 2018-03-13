@@ -30,7 +30,7 @@ void WebKernel::handleClients()
                 _stateChange = millis();
                 _client.flush();
             case S_DISPATCHING:
-                HttpResponse response;
+                HttpResponse response(_resp_buffer);
                 _dispatcher.handle(_request, response);
                 response.headers.set("Connection","close");
                 _client.print(response);
@@ -45,6 +45,7 @@ void WebKernel::handleClients()
     if (!keepClient) {
         _client.stop();
         _state = S_IDLE;
+        _resp_buffer.flush();
     }
 
     if (shouldYield)
