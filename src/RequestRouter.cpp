@@ -44,7 +44,14 @@ bool RequestRouter::urlMatches(const char * pattern, const char * url)
             else if (url[u] == '\0') p++;
             else u++;
         } else {
-            if (pattern[p++] == url[u++]) continue;
+            if (pattern[p] == url[u]) {
+                p++;
+                u++;
+                continue;
+            }
+            if (pattern[p] == '\0' && url[u] == '?')
+                return true;
+            if (pattern[p] == '#') return true;
             return false;
         }
 

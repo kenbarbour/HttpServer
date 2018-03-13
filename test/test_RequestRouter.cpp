@@ -104,5 +104,16 @@ TEST_CASE("Url Wildcards","[RequestRouter]")
     CHECK(RequestRouter::urlMatches("/*/","/foo") == false);
     CHECK(RequestRouter::urlMatches("/foo/*/bar","/foo/baz/bar") == true);
     CHECK(RequestRouter::urlMatches("*","foo") == true);
+    CHECK(RequestRouter::urlMatches("/foo","/foo?bar") == true);
+    CHECK(RequestRouter::urlMatches("/bar","/?bar") == false);
+    CHECK(RequestRouter::urlMatches("/#","/bar?foo") == true);
+    CHECK(RequestRouter::urlMatches("/foo/#","/foo/") == true);
+    CHECK(RequestRouter::urlMatches("/users/*/#","/users/alice/data") == true);
+    CHECK(RequestRouter::urlMatches("/users/*/#","/users/alice/") == true);
+    CHECK(RequestRouter::urlMatches("/users/*/#","/users/alice") == false);
+    CHECK(RequestRouter::urlMatches("/users/*","/users/alice?foo") == true);
+    CHECK(RequestRouter::urlMatches("/fs/#","/fs/foo/bar/baz") == true);
+    CHECK(RequestRouter::urlMatches("/*/*/*","/foo/bar/baz") == true);
+    CHECK(RequestRouter::urlMatches("/*/*/*","/foo/bar/baz/qux") == false);
     
 }
