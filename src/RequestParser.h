@@ -28,6 +28,7 @@ class RequestParser
 
         bool parse();
         bool error() { return _state == S_ERROR; };
+        void reset();
         
 
     private:

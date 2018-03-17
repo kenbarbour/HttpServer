@@ -2,27 +2,27 @@
 
 void WebKernel::handleClients()
 {
-    bool shouldYield = true;
-    bool keepClient = false;
+    bool shouldYield = false;
+    bool keepClient = true;
 
     if (_state == S_IDLE) {
-        WiFiClient client = _server.available();
-        if (!client) return;
+        _client = _server.available();
+        if (!_client) return;
 
-        _client = client;
         _request = HttpRequest();
+        _parser.reset();
         _state = S_RECEIVING;
         _stateChange = millis();
     } 
 
-    if (_client.connected()) {
+    if (millis() - _stateChange >= WEBKERNEL_MAX_WAIT) {
+        keepClient = false;
+    } else if (_client.connected()) {
         switch (_state) {
             case S_IDLE:
                 break;
             case S_RECEIVING:
                 if (!_parser.parse()) {
-                    if (millis() - _stateChange <= WEBKERNEL_MAX_WAIT)
-                        keepClient = false;
                     shouldYield = true;
                     break;
                 }
@@ -39,8 +39,6 @@ void WebKernel::handleClients()
     } else {
         keepClient = false;
     }
-
-    if (millis() - _stateChange <= WEBKERNEL_MAX_WAIT) keepClient = false;
 
     if (!keepClient) {
         _client.stop();

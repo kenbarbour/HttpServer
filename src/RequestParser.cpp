@@ -1,5 +1,9 @@
 #include "RequestParser.h"
 
+void RequestParser::reset() {
+    _state = S_IN_METHOD;
+}
+
 bool RequestParser::parse() {
 
     unsigned int content_length = 0, available = 0, writable = 0;

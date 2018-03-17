@@ -42,3 +42,23 @@ TEST_CASE("Test message data","[RequestParser]")
     CHECK(request.getMessageLength() == 10);
     CHECK_THAT(request.getMessage(), Equals("1234567890"));
 }
+
+TEST_CASE("Test parse multiple requests","[RequestParser]")
+{
+    uint8_t buff[256] = {};
+    Buffer client(buff, 256);
+    HttpRequest request;
+    RequestParser parser(request, client);
+
+    client.write("GET /foo HTTP/1.1\r\nHost: localhost\r\n\r\n");
+    CHECK(parser.parse());
+    CHECK_THAT(request.getUrl(), Equals("/foo"));
+    parser.reset();
+
+    client = Buffer(buff, 256);
+    request = HttpRequest();
+    client.write("GET /bar HTTP/1.1\r\nHost: localhost\r\n\r\n");
+    CHECK(parser.parse());
+    CHECK_THAT(request.getUrl(), Equals("/bar"));
+
+}

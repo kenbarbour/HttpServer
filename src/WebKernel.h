@@ -33,6 +33,7 @@ class WebKernel
 
 #ifdef _TEST_
         void mock_nextClient(const char * next) { _server._next = next; }
+        WiFiClient& mock_currentClient() { return _client; }
 #endif
 
     protected:
