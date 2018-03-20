@@ -39,11 +39,31 @@ TEST_CASE("HttpResponse printTo", "[HttpResponse]")
     Buffer message(response_buffer, 100);
     Buffer client(print_buffer, 100);
     HttpResponse r(message);
+    r.setHttpVersion("HTTP/1.1");
 
     r.code = 200;
     r.write("Response Body");
     r.headers.set("Cookie","1234");
     client.print(r);
 
-    CHECK_THAT((char *)print_buffer, Equals("200 OK\r\nCookie: 1234\r\n\r\nResponse Body"));
+    CHECK_THAT((char *)print_buffer, Equals("HTTP/1.1 200 OK\r\nCookie: 1234\r\n\r\nResponse Body"));
+}
+
+TEST_CASE("HttpResponse get/setHttpVersion", "[HttpResponse]")
+{
+    HttpResponse r;
+
+    SECTION("Empty") {
+        r.setHttpVersion("");
+        CHECK_THAT(r.getHttpVersion(), Equals(""));
+    }
+
+    SECTION("HTTP/1.1") {
+        r.setHttpVersion("HTTP/1.1");
+        CHECK_THAT(r.getHttpVersion(), Equals("HTTP/1.1"));
+    }
+
+    SECTION("Overflow buffer") {
+        r.setHttpVersion("AAAABBBBCCCCDDDDEEEEFFFFGGGGHHHHIIIIJJJJKKKKLLLLMMMMNNNNOOOOPPPP");
+    }
 }

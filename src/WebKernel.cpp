@@ -37,6 +37,7 @@ void WebKernel::handleClients()
                 _client.flush();
             case S_DISPATCHING:
                 HttpResponse response(_resp_buffer);
+                response.setHttpVersion(_request.getHttpVer());
                 _dispatcher.handle(_request, response);
                 response.headers.set("Connection","close");
                 _client.print(response);

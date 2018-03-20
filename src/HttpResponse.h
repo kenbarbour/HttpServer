@@ -11,11 +11,13 @@
 #include "Print.h"
 #include "Printable.h"
 
+#define HTTPRESPONSE_HTTPVER_SIZE 9
+
 class HttpResponse: public Print, public Printable
 {
     public:
-        HttpResponse(Buffer&);
-        HttpResponse(Buffer&, unsigned int);
+        HttpResponse(Buffer&); // TODO: only cnstr needed by WebKernel, add httpver param
+        HttpResponse(Buffer&, unsigned int);  // TODO: remove unnecessary constructors
         HttpResponse(Buffer&, unsigned int, const char *);
         HttpResponse();
         HttpResponse(unsigned int code);
@@ -23,6 +25,8 @@ class HttpResponse: public Print, public Printable
         ~HttpResponse();
         unsigned int code;
         HttpHeaders headers;
+        const char * setHttpVersion(const char *);
+        const char * getHttpVersion() const;
         const char * setReason(const char * reason);
         const char * getReason() const;
         static const char * getDefaultReason(unsigned int);
@@ -35,4 +39,5 @@ class HttpResponse: public Print, public Printable
     private:
         Buffer * buffer;
         char * reason;
+        char httpver[HTTPRESPONSE_HTTPVER_SIZE];
 };

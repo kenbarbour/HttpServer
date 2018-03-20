@@ -1,21 +1,50 @@
 #include "HttpResponse.h"
 
-HttpResponse::HttpResponse(Buffer & buffer): buffer(&buffer), code(200), reason() {};
+/**
+ * TODO: this is the only constructor really needed unless _TEST_
+ */
+HttpResponse::HttpResponse(Buffer & buffer): 
+    buffer(&buffer), 
+    code(200), 
+    reason(), 
+    httpver() 
+{};
 
-HttpResponse::HttpResponse(Buffer & buffer, unsigned int code): buffer(&buffer), code(code), reason() {};
+HttpResponse::HttpResponse(Buffer & buffer, unsigned int code): 
+    buffer(&buffer), 
+    code(code), 
+    reason(),
+    httpver()
+{};
 
-HttpResponse::HttpResponse(Buffer & buffer, unsigned int code, const char * reason)
-    :buffer(&buffer), code(code), reason()
+HttpResponse::HttpResponse(Buffer & buffer, unsigned int code, const char * reason):
+    buffer(&buffer), 
+    code(code), 
+    reason(),
+    httpver()
 {
     setReason(reason);
 }
 
-HttpResponse::HttpResponse(): buffer(), code(200), reason() {};
+HttpResponse::HttpResponse(): 
+    buffer(), 
+    code(200), 
+    reason(),
+    httpver() 
+{};
 
-HttpResponse::HttpResponse(unsigned int code): buffer(), code(code), reason() {}
+HttpResponse::HttpResponse(unsigned int code): 
+    buffer(), 
+    code(code), 
+    reason(),
+    httpver()
+{}
 
-HttpResponse::HttpResponse(unsigned int code, const char * reason)
-    : buffer(), code(code), reason() 
+HttpResponse::HttpResponse(unsigned int code, const char * reason): 
+    buffer(), 
+    code(code), 
+    reason(),
+    httpver()
 {
     setReason(reason);
 }
@@ -34,6 +63,18 @@ const char * HttpResponse::getReason() const
 {
     if (this->reason) return this->reason;
     return HttpResponse::getDefaultReason(code);
+}
+
+const char * HttpResponse::setHttpVersion(const char * version)
+{
+    strncpy(httpver, version, HTTPRESPONSE_HTTPVER_SIZE - 1);
+    httpver[HTTPRESPONSE_HTTPVER_SIZE - 1] = '\0';
+    return httpver;
+}
+
+const char * HttpResponse::getHttpVersion() const
+{
+    return httpver;
 }
 
 const char * HttpResponse::getDefaultReason(unsigned int code)
@@ -101,6 +142,8 @@ size_t HttpResponse::write(uint8_t * data, size_t len)
 size_t HttpResponse::printTo(Print& client) const
 {
     size_t len = 0;
+    len += client.print(getHttpVersion());
+    len += client.print(' ');
     len += client.print((int) code);
     len += client.print(' ');
     len += client.println(getReason());
