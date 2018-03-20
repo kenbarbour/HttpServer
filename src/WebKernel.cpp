@@ -9,6 +9,9 @@ void WebKernel::handleClients()
         _client = _server.available();
         if (!_client) return;
 
+#ifdef DEBUG
+        Serial.println("New client");
+#endif
         _request = HttpRequest();
         _parser.reset();
         _state = S_RECEIVING;
@@ -17,6 +20,9 @@ void WebKernel::handleClients()
 
     if (millis() - _stateChange >= WEBKERNEL_MAX_WAIT) {
         keepClient = false;
+#ifdef DEBUG
+        Serial.println("Time limit reached.  Client will be disconnected");
+#endif
     } else if (_client.connected()) {
         switch (_state) {
             case S_IDLE:
@@ -34,6 +40,7 @@ void WebKernel::handleClients()
                 _dispatcher.handle(_request, response);
                 response.headers.set("Connection","close");
                 _client.print(response);
+                keepClient = false;
                 break; 
         }
     } else {
@@ -41,12 +48,15 @@ void WebKernel::handleClients()
     }
 
     if (!keepClient) {
+#ifdef DEBUG
+        Serial.println("Closing connection to client");
+#endif
         _client.stop();
         _state = S_IDLE;
         _resp_buffer.flush();
     }
 
-    if (shouldYield)
+//    if (shouldYield)
         yield();
 
 }

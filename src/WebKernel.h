@@ -1,6 +1,7 @@
 #pragma once
 #include "Arduino.h"
 #include "WiFiServer.h"
+#include "WiFiClient.h"
 #include "RequestParser.h"
 #include "RequestRouter.h"
 #include "RouteDispatcher.h"
