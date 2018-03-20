@@ -15,7 +15,8 @@ void RouteDispatcher::handle(HttpRequest& request, HttpResponse& response)
             notFoundHandler(request, response);
             break;
         case E_METHOD_NOT_ALLOWED:
-            methodNotAllowedHandler(request, response, router.lastAllowedMethods());
+            responseSetAllowedHeader(response, router.lastAllowedMethods());
+            methodNotAllowedHandler(request, response);
             break;
         default:
             response.code = 500;
@@ -28,11 +29,19 @@ void RouteDispatcher::handle(HttpRequest& request, HttpResponse& response)
 void RouteDispatcher::handleNotFound(HttpRequest& request, HttpResponse& response)
 {
     response.code = 404;
+    response.headers.set("Content-Type","text/plain");
+    response.print(response.getReason());
 }
 
-void RouteDispatcher::handleMethodNotAllowed(HttpRequest& request, HttpResponse& response, uint8_t allowed)
+void RouteDispatcher::handleMethodNotAllowed(HttpRequest& request, HttpResponse& response)
 {
     response.code = 405;
+    response.headers.set("Content-Type","text/plain");
+    response.print(response.getReason());
+}
+
+void RouteDispatcher::responseSetAllowedHeader(HttpResponse& response, uint8_t allowed)
+{
     if (allowed & GET)
         response.headers.append("Allow","GET");
     if (allowed & POST)

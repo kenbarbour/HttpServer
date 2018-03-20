@@ -5,6 +5,8 @@ unsigned int foo;
 
 unsigned int bar;
 
+char error_message[24] = {};
+
 void do_foo(HttpRequest& request, HttpResponse& response)
 {
     foo++;
@@ -17,6 +19,18 @@ void do_bar(HttpRequest& request, HttpResponse& response)
     bar++;
     response.code = 201;
     response.print("Bar");
+}
+
+void handle_notFound(HttpRequest& request, HttpResponse& response)
+{
+    response.code = 454; // unusual code
+    strcpy(error_message, "File Not Found");
+}
+
+void handle_methodNotAllowed(HttpRequest& request, HttpResponse& response)
+{
+    response.code = 455; //unusual code
+    strcpy(error_message, "Method Not Allowed");
 }
 
 TEST_CASE("Test WebKernel", "[WebKernel]")
@@ -93,4 +107,9 @@ TEST_CASE("Test Partial requests", "[WebKernel]")
         REQUIRE(foo == 0);
         REQUIRE(bar == 1);
     }
+}
+
+TEST_CASE("Test WebKernel error handling", "[WebKernel]")
+{
+
 }

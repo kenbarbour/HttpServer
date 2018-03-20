@@ -15,8 +15,9 @@ void dummy_notFoundHandler(HttpRequest& request, HttpResponse& response)
     response.setReason("Custom");
 }
 
-void dummy_methodNotAllowedHandler(HttpRequest& request, HttpResponse& response, uint8_t allowed)
+void dummy_methodNotAllowedHandler(HttpRequest& request, HttpResponse& response)
 {
+    // dont set Allow header. That should be automatically done
     response.code = 405;
     response.setReason("custom_not_allowed");
 }
@@ -47,13 +48,15 @@ TEST_CASE("Test default methodNotAllowedHandler","[RouteDispatcher]")
             { GET, "/", dummy_handler }
         };
 
+    uint8_t buff[100];
+    Buffer buffer(buff, sizeof buff);
     RequestRouter router(routes,1);
     RouteDispatcher dispatcher(router);
     dispatcher.notFoundHandler = dummy_notFoundHandler;
     HttpRequest request;
     request.setMethod("POST");
     request.setUrl("/");
-    HttpResponse response;
+    HttpResponse response(buffer);
 
     dispatcher.handle(request, response);
 
@@ -99,5 +102,8 @@ TEST_CASE("Test methodNotAllowedHandler","[RouteDispatcher]")
     dispatcher.handle(request, response);
 
     CHECK_THAT(response.getReason(), Equals("custom_not_allowed"));
+
+    // Check Allow header is set
+    CHECK_THAT(response.headers.get("Allow"), Equals("GET"));
 
 }

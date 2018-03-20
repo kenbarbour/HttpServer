@@ -11,12 +11,13 @@ class RouteDispatcher
         
         // Default handlers for some common http errors
         static void handleNotFound(HttpRequest&, HttpResponse&);
-        static void handleMethodNotAllowed(HttpRequest&, HttpResponse&, uint8_t);
+        static void handleMethodNotAllowed(HttpRequest&, HttpResponse&);
         
         // re-assignable pointers to error handlers
         void (*notFoundHandler)(HttpRequest&, HttpResponse&);
-        void (*methodNotAllowedHandler)(HttpRequest&, HttpResponse&, uint8_t);
+        void (*methodNotAllowedHandler)(HttpRequest&, HttpResponse&);
 
     private:
         RequestRouter& router;
+        static void responseSetAllowedHeader(HttpResponse&, uint8_t);
 };

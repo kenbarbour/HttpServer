@@ -27,10 +27,25 @@ class WebKernel
             _state(S_IDLE),
             _dispatcher(_router),
             _parser(_request, _client),
-            _resp_buffer(_resp_data, WEBKERNEL_RESPONSE_SIZE)
+            _resp_buffer(_resp_data, WEBKERNEL_RESPONSE_SIZE),
+            _badRequestHandler(handleBadRequest)
             {};
         void begin() { _server.begin(); }
         void handleClients();
+
+        static void handleBadRequest(HttpRequest& req, HttpResponse& resp) {
+            resp.code = 400;
+        }
+
+        void setNotFoundHandler(void (*handler)(HttpRequest&, HttpResponse&))
+        {
+            _dispatcher.notFoundHandler = handler;
+        }
+
+        void setMethodNotAllowedHandler(void (*handler)(HttpRequest&, HttpResponse&))
+        {
+            _dispatcher.methodNotAllowedHandler = handler;
+        }
 
 #ifdef _TEST_
         void mock_nextClient(const char * next) { _server._next = next; }
@@ -50,4 +65,7 @@ class WebKernel
 
         uint8_t _resp_data[WEBKERNEL_RESPONSE_SIZE];
         Buffer _resp_buffer;
+
+        void (*_badRequestHandler)(HttpRequest&, HttpResponse&);
+
 };
