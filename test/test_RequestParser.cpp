@@ -20,7 +20,7 @@ TEST_CASE("Test GET","[RequestParser]")
 
     client.write("HTTP/1.1\r\n");
     CHECK(parser.parse() == 0);
-    CHECK_THAT(request.getHttpVer(), Equals("HTTP/1.1"));
+    CHECK_THAT(request.getHttpVersion(), Equals("HTTP/1.1"));
 
     client.write("Host: localhost\r\n");
     CHECK(parser.parse() == 0);

@@ -24,8 +24,8 @@ class HttpRequest
         const char * setUrl(const char *);
         const char * setUrl(const char *, size_t);
         const char * getUrl();
-        const char * setHttpVer(const char *); // TODO: setHttpVersion()
-        const char * getHttpVer(); // TODO: getHttpVersion()
+        const char * setHttpVersion(const char *);
+        const char * getHttpVersion() const;
         const char * setMessage(const char *);
         const char * setMessage(const char *, unsigned int);
         const char * getMessage();

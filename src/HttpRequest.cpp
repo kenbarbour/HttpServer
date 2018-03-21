@@ -14,13 +14,13 @@ const char * HttpRequest::getMethod()
     return method;
 }
 
-const char * HttpRequest::setHttpVer(const char * ver)
+const char * HttpRequest::setHttpVersion(const char * ver)
 {
     strncpy(this->httpver, ver, HTTPREQUEST_HTTPVER_SIZE);
     return this->httpver;
 }
 
-const char * HttpRequest::getHttpVer()
+const char * HttpRequest::getHttpVersion() const
 {
     return httpver;
 }

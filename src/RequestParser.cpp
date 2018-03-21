@@ -41,7 +41,7 @@ bool RequestParser::parse() {
                 if (in == '\r') continue;
                 if (in == '\n') {
                     *(_i) = '\0';
-                    request.setHttpVer(_buffer);
+                    request.setHttpVersion(_buffer);
                     _i = _buffer;
                     _state = S_IN_HEADER;
                     break;
