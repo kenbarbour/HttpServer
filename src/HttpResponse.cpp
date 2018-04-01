@@ -3,22 +3,22 @@
 /**
  * TODO: this is the only constructor really needed unless _TEST_
  */
-HttpResponse::HttpResponse(Buffer & buffer): 
-    buffer(&buffer), 
+HttpResponse::HttpResponse(Stream& buffer): 
+    content(&buffer), 
     code(200), 
     reason(), 
     httpver() 
 {};
 
-HttpResponse::HttpResponse(Buffer & buffer, unsigned int code): 
-    buffer(&buffer), 
+HttpResponse::HttpResponse(Stream& buffer, unsigned int code): 
+    content(&buffer), 
     code(code), 
     reason(),
     httpver()
 {};
 
-HttpResponse::HttpResponse(Buffer & buffer, unsigned int code, const char * reason):
-    buffer(&buffer), 
+HttpResponse::HttpResponse(Stream& buffer, unsigned int code, const char * reason):
+    content(&buffer), 
     code(code), 
     reason(),
     httpver()
@@ -27,21 +27,21 @@ HttpResponse::HttpResponse(Buffer & buffer, unsigned int code, const char * reas
 }
 
 HttpResponse::HttpResponse(): 
-    buffer(), 
+    content(), 
     code(200), 
     reason(),
     httpver() 
 {};
 
 HttpResponse::HttpResponse(unsigned int code): 
-    buffer(), 
+    content(), 
     code(code), 
     reason(),
     httpver()
 {}
 
 HttpResponse::HttpResponse(unsigned int code, const char * reason): 
-    buffer(), 
+    content(), 
     code(code), 
     reason(),
     httpver()
@@ -129,17 +129,7 @@ const char * HttpResponse::getDefaultReason(unsigned int code)
     }
 }
 
-size_t HttpResponse::write(uint8_t data)
-{
-    return buffer->write(data);
-}
-
-size_t HttpResponse::write(uint8_t * data, size_t len)
-{
-    return buffer->write(data, len);
-}
-
-size_t HttpResponse::printTo(Print& client) const
+size_t HttpResponse::send(Print& client)
 {
     size_t len = 0;
     len += client.print(getHttpVersion());
@@ -148,8 +138,9 @@ size_t HttpResponse::printTo(Print& client) const
     len += client.print(' ');
     len += client.println(getReason());
     len += client.println(headers);
-    for (size_t i = buffer->available(); i > 0; i--)
-        len += client.print((char)buffer->read());
+    while (content->available()) {
+        len += client.write(content->read());
+    }
     return len;
 }
 
