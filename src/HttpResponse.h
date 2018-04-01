@@ -8,17 +8,16 @@
 #include "Arduino.h"
 #endif
 
-#include "Print.h"
 #include "Printable.h"
 
 #define HTTPRESPONSE_HTTPVER_SIZE 9
 
-class HttpResponse: public Print, public Printable
+class HttpResponse
 {
     public:
-        HttpResponse(Buffer&); // TODO: only cnstr needed by WebKernel, add httpver param
-        HttpResponse(Buffer&, unsigned int);  // TODO: remove unnecessary constructors
-        HttpResponse(Buffer&, unsigned int, const char *);
+        HttpResponse(Stream&); // TODO: only cnstr needed by WebKernel, add httpver param
+        HttpResponse(Stream&, unsigned int);  // TODO: remove unnecessary constructors
+        HttpResponse(Stream&, unsigned int, const char *);
         HttpResponse();
         HttpResponse(unsigned int code);
         HttpResponse(unsigned int code, const char *);
@@ -30,14 +29,11 @@ class HttpResponse: public Print, public Printable
         const char * setReason(const char * reason);
         const char * getReason() const;
         static const char * getDefaultReason(unsigned int);
-        void send(Stream &client);
-        size_t write (uint8_t);
-        size_t write (uint8_t *, size_t);
-        using Print::write;
+        Stream * content;
 
-        size_t printTo(Print&) const;
+        size_t send(Print&);
+
     private:
-        Buffer * buffer;
         char * reason;
         char httpver[HTTPRESPONSE_HTTPVER_SIZE];
 };

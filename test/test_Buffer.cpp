@@ -124,14 +124,14 @@ TEST_CASE("Buffer is a Stream","[Buffer][Stream]")
 
 }
 
-TEST_CASE("Test flush","[Buffer]")
+TEST_CASE("Test clear","[Buffer]")
 {
     uint8_t ptr[8];
     Buffer buffer(ptr, 8);
 
     buffer.write("Foo");
     REQUIRE(buffer.available() == 3);
-    buffer.flush();
+    buffer.clear();
     REQUIRE(buffer.available() == 0);
     buffer.write("Bar");
     REQUIRE(buffer.available() == 3);

@@ -26,16 +26,10 @@ class WebKernel
             _router(routes, num),
             _state(S_IDLE),
             _dispatcher(_router),
-            _parser(_request, _client),
-            _resp_buffer(_resp_data, WEBKERNEL_RESPONSE_SIZE),
-            _badRequestHandler(handleBadRequest)
+            _parser(_request, _client)
             {};
         void begin() { _server.begin(); }
         void handleClients();
-
-        static void handleBadRequest(HttpRequest& req, HttpResponse& resp) {
-            resp.code = 400;
-        }
 
         void setNotFoundHandler(void (*handler)(HttpRequest&, HttpResponse&))
         {
@@ -63,9 +57,6 @@ class WebKernel
         WebKernelState _state;
         unsigned long int _stateChange;
 
-        uint8_t _resp_data[WEBKERNEL_RESPONSE_SIZE];
-        Buffer _resp_buffer;
-
-        void (*_badRequestHandler)(HttpRequest&, HttpResponse&);
+        void dispatchRequest();
 
 };

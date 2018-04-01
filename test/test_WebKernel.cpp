@@ -7,18 +7,25 @@ unsigned int bar;
 
 char error_message[24] = {};
 
+char response_buffer[100] = {};
+Buffer message((uint8_t*)response_buffer, 100);
+
 void do_foo(HttpRequest& request, HttpResponse& response)
 {
     foo++;
     response.code = 200;
-    response.print("Foo");
+    response.content = &message;
+    message.clear();
+    message.print("Foo");
 }
 
 void do_bar(HttpRequest& request, HttpResponse& response)
 {
     bar++;
     response.code = 201;
-    response.print("Bar");
+    response.content = &message;
+    message.clear();
+    message.print("Bar");
 }
 
 void handle_notFound(HttpRequest& request, HttpResponse& response)

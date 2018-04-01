@@ -32,7 +32,7 @@ TEST_CASE("Unset reason", "[HttpResponse]")
     REQUIRE_THAT(response.getReason(), Equals("OK")); // unsetting reason should restore default
 }
 
-TEST_CASE("HttpResponse printTo", "[HttpResponse]")
+TEST_CASE("HttpResponse send", "[HttpResponse]")
 {
     uint8_t response_buffer[100];
     uint8_t print_buffer[100];
@@ -42,11 +42,12 @@ TEST_CASE("HttpResponse printTo", "[HttpResponse]")
     r.setHttpVersion("HTTP/1.1");
 
     r.code = 200;
-    r.write("Response Body");
+    message.write("AAAABBBBCCCCDDDD");
     r.headers.set("Cookie","1234");
-    client.print(r);
+    r.content = &message;
+    r.send(client);
 
-    CHECK_THAT((char *)print_buffer, Equals("HTTP/1.1 200 OK\r\nCookie: 1234\r\n\r\nResponse Body"));
+    CHECK_THAT((char *)print_buffer, Equals("HTTP/1.1 200 OK\r\nCookie: 1234\r\n\r\nAAAABBBBCCCCDDDD"));
 }
 
 TEST_CASE("HttpResponse get/setHttpVersion", "[HttpResponse]")

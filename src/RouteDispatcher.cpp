@@ -30,14 +30,12 @@ void RouteDispatcher::handleNotFound(HttpRequest& request, HttpResponse& respons
 {
     response.code = 404;
     response.headers.set("Content-Type","text/plain");
-    response.print(response.getReason());
 }
 
 void RouteDispatcher::handleMethodNotAllowed(HttpRequest& request, HttpResponse& response)
 {
     response.code = 405;
     response.headers.set("Content-Type","text/plain");
-    response.print(response.getReason());
 }
 
 void RouteDispatcher::responseSetAllowedHeader(HttpResponse& response, uint8_t allowed)

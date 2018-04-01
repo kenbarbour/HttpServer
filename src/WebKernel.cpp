@@ -36,13 +36,11 @@ void WebKernel::handleClients()
                 _stateChange = millis();
                 _client.flush();
             case S_DISPATCHING:
-                HttpResponse response(_resp_buffer);
-                response.setHttpVersion(_request.getHttpVersion());
-                if (!_parser.error()) {
-                    _dispatcher.handle(_request, response);
-                    response.headers.set("Connection","close");
-                    _client.print(response);
+                if (_parser.error()) {
+                    keepClient = false;
+                    break;
                 }
+                dispatchRequest();
                 keepClient = false;
                 break; 
         }
@@ -56,7 +54,6 @@ void WebKernel::handleClients()
 #endif
         _client.stop();
         _state = S_IDLE;
-        _resp_buffer.flush();
     }
 
 //    if (shouldYield)
@@ -64,4 +61,10 @@ void WebKernel::handleClients()
 
 }
 
-
+void WebKernel::dispatchRequest()
+{
+    HttpResponse response;
+    response.setHttpVersion(_request.getHttpVersion());
+    _dispatcher.handle(_request, response);
+    response.send(_client);
+}

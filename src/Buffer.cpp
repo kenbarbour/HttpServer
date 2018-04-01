@@ -9,6 +9,11 @@ int Buffer::availableForWrite()
     return size - num;
 }
 
+int Buffer::available() const
+{
+    return num;
+}
+
 int Buffer::available()
 {
     return num;
@@ -22,21 +27,6 @@ size_t Buffer::write(uint8_t byte)
     num++;
     return 1;
 }
-
-/*
-size_t Buffer::write(const uint8_t * buff, size_t len)
-{
-    size_t avail = availableToWrite();
-    size_t toWrite = (avail < len) ? avail : len;
-    for (size_t i = 0; i < toWrite; i++) {
-        if (w_ptr >= start + size) w_ptr = start;
-        *(w_ptr++) = buff[i];
-    }
-    num += toWrite;
-
-    return toWrite;
-}
-*/
 
 int Buffer::read()
 {
@@ -53,7 +43,20 @@ int Buffer::peek()
     return *(r_ptr);
 }
 
-void Buffer::flush()
+size_t Buffer::printTo(Print& stream) const
+{
+    size_t av = available();
+    size_t written = 0;
+    uint8_t * ptr = r_ptr;
+    while (written < av) {
+        if (ptr >= start + size) ptr = start;
+        written += stream.write(*(ptr++));
+    }
+    return written;
+    
+}
+
+void Buffer::clear()
 {
     w_ptr = start;
     r_ptr = start;
