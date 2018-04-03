@@ -41,6 +41,11 @@ class WebKernel
             _dispatcher.methodNotAllowedHandler = handler;
         }
 
+        void setTerminateHandler(void (*handler)(const HttpRequest&, const HttpResponse&))
+        {
+            _terminateHandler = handler;
+        }
+
 #ifdef _TEST_
         void mock_nextClient(const char * next) { _server._next = next; }
         WiFiClient& mock_currentClient() { return _client; }
@@ -58,5 +63,7 @@ class WebKernel
         unsigned long int _stateChange;
 
         void dispatchRequest();
+
+        void (*_terminateHandler)(const HttpRequest&, const HttpResponse&);
 
 };

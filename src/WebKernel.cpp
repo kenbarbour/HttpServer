@@ -67,4 +67,6 @@ void WebKernel::dispatchRequest()
     response.setHttpVersion(_request.getHttpVersion());
     _dispatcher.handle(_request, response);
     response.send(_client);
+    if (_terminateHandler != nullptr)
+        _terminateHandler(_request, response);
 }
