@@ -10,6 +10,7 @@ char error_message[24] = {};
 char response_buffer[100] = {};
 Buffer message((uint8_t*)response_buffer, 100);
 bool term = false;
+bool init = false;
 
 void do_foo(HttpRequest& request, HttpResponse& response)
 {
@@ -44,6 +45,11 @@ void handle_methodNotAllowed(HttpRequest& request, HttpResponse& response)
 void handle_terminate(const HttpRequest& request, const HttpResponse& response)
 {
     term = true;
+}
+
+void handle_init(HttpRequest& request, HttpResponse& response)
+{
+    init = true;
 }
 
 TEST_CASE("Test WebKernel", "[WebKernel]")
@@ -125,6 +131,24 @@ TEST_CASE("Test Partial requests", "[WebKernel]")
 TEST_CASE("Test WebKernel error handling", "[WebKernel]")
 {
 
+}
+
+TEST_CASE("WebKernel init handler", "[WebKernel]")
+{
+    Route routes[] = {
+        { GET, "/foo", do_foo },
+        { GET, "/bar", do_bar }
+    };
+    WebKernel kernel(80, routes, 2);
+    foo = bar = 0;
+    term = false;
+    init = false;
+    kernel.setInitHandler(handle_init);
+    kernel.mock_nextClient("GET /foo HTTP/1.1\r\nHost: localhost\r\n\r\n");
+
+    kernel.handleClients();
+
+    CHECK(init == true);
 }
 
 TEST_CASE("WebKernel terminate handler", "[WebKernel]")
