@@ -26,7 +26,9 @@ class WebKernel
             _router(routes, num),
             _state(S_IDLE),
             _dispatcher(_router),
-            _parser(_request, _client)
+            _parser(_request, _client),
+            _initHandler(nullptr),
+            _terminateHandler(nullptr)
             {};
         void begin() { _server.begin(); }
         void handleClients();
@@ -39,6 +41,16 @@ class WebKernel
         void setMethodNotAllowedHandler(void (*handler)(HttpRequest&, HttpResponse&))
         {
             _dispatcher.methodNotAllowedHandler = handler;
+        }
+
+        void setInitHandler(void (*handler)(HttpRequest&, HttpResponse&))
+        {
+            _initHandler = handler;
+        }
+
+        void setTerminateHandler(void (*handler)(const HttpRequest&, const HttpResponse&))
+        {
+            _terminateHandler = handler;
         }
 
 #ifdef _TEST_
@@ -58,5 +70,8 @@ class WebKernel
         unsigned long int _stateChange;
 
         void dispatchRequest();
+
+        void (*_initHandler)(HttpRequest&, HttpResponse&);
+        void (*_terminateHandler)(const HttpRequest&, const HttpResponse&);
 
 };
