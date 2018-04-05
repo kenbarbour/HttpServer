@@ -10,22 +10,6 @@ HttpResponse::HttpResponse(Stream& buffer):
     httpver() 
 {};
 
-HttpResponse::HttpResponse(Stream& buffer, unsigned int code): 
-    content(&buffer), 
-    code(code), 
-    reason(),
-    httpver()
-{};
-
-HttpResponse::HttpResponse(Stream& buffer, unsigned int code, const char * reason):
-    content(&buffer), 
-    code(code), 
-    reason(),
-    httpver()
-{
-    setReason(reason);
-}
-
 HttpResponse::HttpResponse(): 
     content(), 
     code(200), 
@@ -33,21 +17,6 @@ HttpResponse::HttpResponse():
     httpver() 
 {};
 
-HttpResponse::HttpResponse(unsigned int code): 
-    content(), 
-    code(code), 
-    reason(),
-    httpver()
-{}
-
-HttpResponse::HttpResponse(unsigned int code, const char * reason): 
-    content(), 
-    code(code), 
-    reason(),
-    httpver()
-{
-    setReason(reason);
-}
 
 const char * HttpResponse::setReason(const char * reason)
 {
