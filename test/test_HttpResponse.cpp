@@ -34,11 +34,13 @@ TEST_CASE("Unset reason", "[HttpResponse]")
 
 TEST_CASE("HttpResponse send", "[HttpResponse]")
 {
-    uint8_t response_buffer[100];
+    uint8_t response_buffer[100] = "AAAABBBBCCCCDDDDEEEE";
     uint8_t print_buffer[100];
     Buffer message(response_buffer, 100);
     Buffer client(print_buffer, 100);
     HttpResponse r(message);
+    REQUIRE(message.available() == 0);
+
     r.setHttpVersion("HTTP/1.1");
 
     r.code = 200;
