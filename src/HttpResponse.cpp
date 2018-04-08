@@ -10,8 +10,7 @@ HttpResponse::HttpResponse(Stream& buffer):
     httpver() 
 {};
 
-HttpResponse::HttpResponse(): 
-    content(), 
+HttpResponse::HttpResponse():  
     code(200), 
     reason(),
     httpver() 
