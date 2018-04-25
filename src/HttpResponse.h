@@ -30,6 +30,7 @@ class HttpResponse
         const char * getReason() const;
         static const char * getDefaultReason(unsigned int);
         Stream * content;
+        void setContent(Stream& stream) { content = &stream; }
 
         size_t send(Print&);
 

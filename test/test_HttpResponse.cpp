@@ -68,3 +68,12 @@ TEST_CASE("HttpResponse get/setHttpVersion", "[HttpResponse]")
         r.setHttpVersion("AAAABBBBCCCCDDDDEEEEFFFFGGGGHHHHIIIIJJJJKKKKLLLLMMMMNNNNOOOOPPPP");
     }
 }
+
+TEST_CASE("HttpResponse setContent", "[HttpResponse]")
+{
+    HttpResponse r;
+    uint8_t buff[10];
+    Buffer content(buff, sizeof(buff));
+
+    r.setContent(content);
+}
