@@ -3,7 +3,7 @@ MODULES= src test
 SOURCES ?= $(wildcard $(addsuffix /*.cpp, $(MODULES)))
 OBJECTS := $(addsuffix .o, $(addprefix .build/, $(basename $(SOURCES))))
 DEPFILES := $(subst .o,.dep, $(subst .build/,.deps/, $(OBJECTS)))
-TESTCPPFLAGS = -D_TEST_ $(addprefix -I, $(MODULES)) -Iarduino -g
+TESTCPPFLAGS = -D_TEST_ $(addprefix -I, $(MODULES)) -g
 CPPDEPFLAGS = -MMD -MP -MF .deps/$(basename $<).dep
 TEST_TARGET=run_tests
 

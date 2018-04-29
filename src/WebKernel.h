@@ -69,7 +69,7 @@ class WebKernel
         WebKernelState _state;
         unsigned long int _stateChange;
 
-        void dispatchRequest();
+        void dispatchRequest(HttpResponse& response);
 
         void (*_initHandler)(HttpRequest&, HttpResponse&);
         void (*_terminateHandler)(const HttpRequest&, const HttpResponse&);

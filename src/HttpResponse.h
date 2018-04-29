@@ -16,11 +16,7 @@ class HttpResponse
 {
     public:
         HttpResponse(Stream&); // TODO: only cnstr needed by WebKernel, add httpver param
-        HttpResponse(Stream&, unsigned int);  // TODO: remove unnecessary constructors
-        HttpResponse(Stream&, unsigned int, const char *);
         HttpResponse();
-        HttpResponse(unsigned int code);
-        HttpResponse(unsigned int code, const char *);
         ~HttpResponse();
         unsigned int code;
         HttpHeaders headers;

@@ -40,7 +40,11 @@ void WebKernel::handleClients()
                     keepClient = false;
                     break;
                 }
-                dispatchRequest();
+#ifdef DEBUG
+  Serial.println("Dispatching");
+#endif
+                HttpResponse response;
+                dispatchRequest(response);
                 keepClient = false;
                 break; 
         }
@@ -61,12 +65,22 @@ void WebKernel::handleClients()
 
 }
 
-void WebKernel::dispatchRequest()
+void WebKernel::dispatchRequest(HttpResponse& response)
 {
-    HttpResponse response;
     response.setHttpVersion(_request.getHttpVersion());
-    if (_initHandler != nullptr)
+#ifdef DEBUG
+    Serial.print("Is init handler set? ");
+#endif
+    if (_initHandler != nullptr) {
+#ifdef DEBUG
+        Serial.println("Yes");
+#endif
         _initHandler(_request, response);
+    } else {
+#ifdef DEBUG
+        Serial.println("No");
+#endif
+    }
     _dispatcher.handle(_request, response);
     response.send(_client);
     if (_terminateHandler != nullptr)
