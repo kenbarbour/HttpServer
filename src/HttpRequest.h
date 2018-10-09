@@ -20,10 +20,10 @@ class HttpRequest
         HttpRequest();
         ~HttpRequest();
         const char * setMethod(const char *);
-        const char * getMethod();
+        const char * getMethod() const;
         const char * setUrl(const char *);
         const char * setUrl(const char *, size_t);
-        const char * getUrl();
+        const char * getUrl() const;
         const char * setHttpVersion(const char *);
         const char * getHttpVersion() const;
         const char * setMessage(const char *);

@@ -9,7 +9,7 @@ const char * HttpRequest::setMethod(const char * method)
     return this->method;
 }
 
-const char * HttpRequest::getMethod()
+const char * HttpRequest::getMethod() const
 {
     return method;
 }
@@ -39,7 +39,7 @@ const char * HttpRequest::setUrl(const char * url)
     return this->setUrl(url, len);
 }
 
-const char * HttpRequest::getUrl()
+const char * HttpRequest::getUrl() const
 {
     return this->url;
 }
