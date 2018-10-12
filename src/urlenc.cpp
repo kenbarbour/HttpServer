@@ -44,19 +44,33 @@ int urlenc::query_key_pos(const char * query, const char * key)
 {
   int i = 0, j = 0;
   char q, k;
-
   if (key[0] == '\0') return -1;
-
   do {
     q = query[i+j];
     k = key[j];
     if (k == '\0' && q == '=')
       return i;
-
     if (q == k) {
       j++;
     } else i++;
-
   } while (q != '\0');
   return -1;
+}
+
+int urlenc::query_val_pos(const char * query, const char * key)
+{
+  int i = 0;
+  int pos = query_key_pos(query, key);
+  if (pos == -1) return -1;
+  while (key[i] != '\0') i++;
+  i++;
+  return pos + i;
+}
+
+int urlenc::query_val_len(const char * query, const char * key)
+{
+  int len = 0, i = query_val_pos(query, key);
+  if (i == -1) return -1;
+  while (query[i + len] != '\0' && query[i + len] != '&') len++;
+  return len;
 }

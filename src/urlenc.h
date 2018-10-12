@@ -7,4 +7,6 @@ namespace urlenc
   char hexval(char);
 
   int query_key_pos(const char *, const char *);
+  int query_val_pos(const char *, const char *);
+  int query_val_len(const char *, const char *);
 }

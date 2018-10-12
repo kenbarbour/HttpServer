@@ -92,4 +92,31 @@ TEST_CASE("Locate position of a key/value pair in the query component","[urlenc]
   CHECK(query_key_pos("","") == -1);
   CHECK(query_key_pos("","bar") == -1);
   CHECK(query_key_pos("foo=bar&baz=qux","") == -1);
+  CHECK(query_key_pos("foo=bar&bar=baz","bar") == 8);
+}
+
+TEST_CASE("Location position of a value in a key/value pair in the query component","[urlenc][query_val_pos]")
+{
+  CHECK(query_val_pos("foo=1&bar=2&baz=3","bar") == 10);
+  CHECK(query_val_pos("foo=1&bar=2&baz=3","foo") == 4);
+  CHECK(query_val_pos("foo=1&bar=2&baz=3","qux") == -1);
+  CHECK(query_val_pos("foo=1&bar=&baz=3","baz") == 15);
+  CHECK(query_val_pos("j=10&bar=&baz=3","bar") == 9);
+  CHECK(query_val_pos("","") == -1);
+  CHECK(query_val_pos("","bar") == -1);
+  CHECK(query_val_pos("foo=bar&baz=qux","") == -1);
+  CHECK(query_val_pos("foo=bar&bar=baz","bar") == 12);
+}
+
+TEST_CASE("Determine length of value in key/value pair in the query component", "[urlenc][query_val_len]")
+{
+  CHECK(query_val_len("foo=1&bar=2&baz=3","bar") == 1);
+  CHECK(query_val_len("foo=1&bar=2&baz=3","foo") == 1);
+  CHECK(query_val_len("foo=1&bar=2&baz=3","qux") == -1);
+  CHECK(query_val_len("foo=1&bar=&baz=39","baz") == 2);
+  CHECK(query_val_len("j=10&bar=&baz=3","bar") == 0);
+  CHECK(query_val_len("","") == -1);
+  CHECK(query_val_len("","bar") == -1);
+  CHECK(query_val_len("foo=bar&baz=qux","") == -1);
+  CHECK(query_val_len("foo=bar&bar=baz","bar") == 3);
 }
