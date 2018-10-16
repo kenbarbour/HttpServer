@@ -53,6 +53,11 @@ class WebKernel
             _terminateHandler = handler;
         }
 
+        WiFiClient client()
+        {
+          return _client;
+        }
+
 #ifdef _TEST_
         void mock_nextClient(const char * next) { _server._next = next; }
         WiFiClient& mock_currentClient() { return _client; }
@@ -61,7 +66,7 @@ class WebKernel
     protected:
 
         WiFiServer _server;
-        WiFiClient _client; 
+        WiFiClient _client;
         HttpRequest _request;
         RequestRouter _router;
         RequestParser _parser;
