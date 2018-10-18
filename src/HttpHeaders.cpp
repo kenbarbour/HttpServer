@@ -74,13 +74,44 @@ int HttpHeaders::indexof( const char * name)
 bool HttpHeaders::names_match(const char * a, const char * b)
 {
     char ac,bc;
-    for (int i = 0; ac=a[i]; i++) {
+    for (int i = 0; ; i++) {
+        ac = a[i];
         bc = b[i];
+        if (!ac) break;
         if (ac == bc) continue;
         if (ac > 96 && ac < 123) ac -= 32;
         if (bc > 96 && bc < 123) bc -= 32;
         if (ac != bc) return false;
     }
 
-    return true;
+    return (ac == bc);
+}
+
+bool HttpHeaders::in(const char * name, const char * search)
+{
+  char* val = get(name);
+  if (val == nullptr) return false;
+
+  int i = 0;
+  int j = 0;
+  while (true) {
+    if (val[i] == '\0')
+      return (search[j] == '\0');
+
+    // stop searching
+    if (search[j] == '\0') {
+      if (val[i] == '\0' || val[i] == ',' || val[i] == ';')
+        return true;
+      else j = 0;
+    }
+
+    if (val[i] == search[j]) {
+      j++;
+    } else {
+      j = 0;
+    }
+    i++;
+  }
+
+  return false;
 }

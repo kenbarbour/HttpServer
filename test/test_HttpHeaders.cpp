@@ -6,8 +6,8 @@
 using Catch::Matchers::Equals;
 
 TEST_CASE("Empty HttpHeaders","[HttpHeaders]") {
-   HttpHeaders headers; 
-   
+   HttpHeaders headers;
+
    CHECK(headers.count() == 0);
 }
 
@@ -21,6 +21,13 @@ TEST_CASE("Get and set headers","[HttpHeaders]"){
     headers.set("foo","bar");
     CHECK_THAT(headers.get("foo"), Equals("bar"));
     CHECK(headers.count() == 1);
+}
+
+TEST_CASE("Name contains another name", "[HttpHeaders]")
+{
+  HttpHeaders h;
+  h.set("Accept-Encoding","foo, bar");
+  CHECK(h.has("Accept") == false);
 }
 
 TEST_CASE("Set headers again","[HttpHeaders]"){
@@ -46,7 +53,7 @@ TEST_CASE("Append empty header behaves like set","[HttpHeaders]")
 {
     HttpHeaders headers;
     headers.append("foo","bar");
-    
+
     CHECK_THAT(headers.get("foo"), Equals("bar"));
     CHECK(headers.count() == 1);
 }
@@ -55,13 +62,13 @@ TEST_CASE("Fill headers","[HttpHeaders]") {
     HttpHeaders headers;
     char name[HTTPHEADERS_NAME_SZ] = "";
     strcpy(name, "header");
-   
+
     for (int i = 0; i < HTTPHEADERS_NUM; i++) {
         name[6] = 0x41 + i;
         headers.set(name,"Foo");
         REQUIRE_THAT(headers.get(name), Equals("Foo"));
         CHECK(headers.count() == (i+1) );
-    } 
+    }
 }
 
 TEST_CASE("Header name is case insensitive","[HttpHeaders]") {
@@ -105,4 +112,25 @@ TEST_CASE("HttpHeaders printTo", "[HttpHeaders]")
     h.set("Bar","baz");
     buffer.print(h);
     CHECK_THAT((char *) buff, Equals("Foo: Bar\r\nBar: baz\r\n"));
+}
+
+TEST_CASE("HttpHeaders find in list", "[HttpHeaders][HttpHeaders::in]")
+{
+  HttpHeaders h;
+  h.set("Accept-Encoding","gzip, deflate");
+  CHECK(h.in("Accept-Encoding","gzip") == true);
+  CHECK(h.in("Accept-Encoding","deflate") == true);
+  CHECK(h.in("Accept-Encoding","identity") == false);
+
+  CHECK(h.in("Accept","gzip") == false); // Accept is not in the headers
+}
+
+TEST_CASE("Find matches when a q-factor is provided", "[HttpHeaders]")
+{
+  HttpHeaders h;
+  h.set("Accept","text/html, application/xhtml+xml, application/xml;q=0.9, */*;q=0.8");
+  CHECK(h.in("Accept","text/html"));
+  CHECK(h.in("Accept","application/xhtml+xml"));
+  CHECK(h.in("Accept","application/xml"));
+  CHECK(h.in("Accept","*/*"));
 }

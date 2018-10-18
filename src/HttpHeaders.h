@@ -29,6 +29,8 @@ class HttpHeaders: public Printable {
         void append(const char *, const char *);
         char* get(const char*); //TODO make const
         bool has(const char*);
+        bool in(const char*, const char*);
+
         unsigned int count();
         unsigned int length();
         virtual size_t printTo(Print&) const;
@@ -39,4 +41,3 @@ class HttpHeaders: public Printable {
         int indexof( const char *);
         bool names_match(const char *, const char *);
 };
-
