@@ -62,3 +62,27 @@ TEST_CASE("Test parse multiple requests","[RequestParser]")
     CHECK_THAT(request.getUrl(), Equals("/bar"));
 
 }
+
+TEST_CASE("Test parse POST then GET", "[RequestParser][POSTthenGET]")
+{
+  uint8_t buff[512] = {};
+  Buffer client(buff, 512);
+  HttpRequest request;
+  RequestParser parser(request, client);
+
+  client.write("POST /foo HTTP/1.1\r\nHost: localhost\r\nUser-Agent: curl/7.55.1\r\nAccept: */*\r\nContent-Length: 20\r\nContent-Type: application/x-www-form-urlencoded\r\n\r\nssid=foo&passphrase=");
+  CHECK(parser.parse());
+  CHECK(!client.available());
+  CHECK_THAT(request.getUrl(), Equals("/foo"));
+  CHECK_THAT(request.getMethod(), Equals("POST"));
+  parser.reset();
+
+  client = Buffer(buff, 256);
+  request = HttpRequest();
+  client.write("GET /foo HTTP/1.1\r\nHost: localhost\r\nUser-Agent: curl/7.55.1\r\nAccept: */*\r\n\r\n");
+  CHECK(client.available() == 76);
+  CHECK(client.peek() == 'G');
+  CHECK(parser.parse());
+  CHECK_THAT(request.getUrl(), Equals("/foo"));
+  CHECK_THAT(request.getMethod(), Equals("GET"));
+}

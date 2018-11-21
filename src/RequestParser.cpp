@@ -93,6 +93,7 @@ bool RequestParser::parse() {
                     if (available) client.flush();
                     *(_i++) = '\0';
                     request.setMessage(_buffer, content_length);
+                    _i = _buffer;
                     _state = S_COMPLETE;
                     break;
                 }
