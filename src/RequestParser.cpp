@@ -2,6 +2,7 @@
 
 void RequestParser::reset() {
     _state = S_IN_METHOD;
+    _i = _buffer;
 }
 
 bool RequestParser::parse() {
