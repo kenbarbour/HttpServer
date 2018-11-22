@@ -23,7 +23,7 @@ const Route* RequestRouter::match(HttpRequest &request)
     if (urlMatch) {
         setRouteError(E_METHOD_NOT_ALLOWED);
         return nullptr;
-    } 
+    }
 
     setRouteError(E_NOT_FOUND);
     return nullptr;
@@ -34,7 +34,7 @@ bool RequestRouter::urlMatches(const char * pattern, const char * url)
 {
     unsigned int u = 0;
     unsigned int p = 0;
-    
+
     do {
         if (pattern[p] == url[u] && url[u] == '\0')
             return true;
@@ -62,8 +62,8 @@ bool RequestRouter::urlMatches(const char * pattern, const char * url)
 
 bool RequestRouter::methodMatches(uint8_t pattern, uint8_t method)
 {
-    return (pattern & method) == method;
+    return method && (pattern & method) == method;
 }
 
-RequestRouter::~RequestRouter() 
+RequestRouter::~RequestRouter()
 {}

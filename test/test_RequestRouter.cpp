@@ -87,7 +87,25 @@ TEST_CASE("Method not allowed", "[RequestRouter]")
     HttpRequest request;
     request.setMethod("PUT");
     request.setUrl("/");
-    
+
+    match = router.match(request);
+    CHECK(match == nullptr);
+    CHECK(router.getRouteError() == E_METHOD_NOT_ALLOWED);
+    CHECK(router.lastAllowedMethods() == GET);
+}
+
+TEST_CASE("Bad method", "[RequestRouter][BadMethod]")
+{
+    Route routes[] = {
+        { GET, "/" }
+    };
+    RequestRouter router(routes, 1);
+    const Route * match;
+
+    HttpRequest request;
+    request.setMethod("BAD");
+    request.setUrl("/");
+
     match = router.match(request);
     CHECK(match == nullptr);
     CHECK(router.getRouteError() == E_METHOD_NOT_ALLOWED);
@@ -115,5 +133,5 @@ TEST_CASE("Url Wildcards","[RequestRouter]")
     CHECK(RequestRouter::urlMatches("/fs/#","/fs/foo/bar/baz") == true);
     CHECK(RequestRouter::urlMatches("/*/*/*","/foo/bar/baz") == true);
     CHECK(RequestRouter::urlMatches("/*/*/*","/foo/bar/baz/qux") == false);
-    
+
 }
