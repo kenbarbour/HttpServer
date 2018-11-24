@@ -18,6 +18,7 @@ class Buffer: public Stream, public Printable
         int peek();
         int read();
         void clear();
+        void flush() { clear(); };
         using Print::write;
         size_t printTo(Print& stream) const;
     
