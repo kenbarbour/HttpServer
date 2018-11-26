@@ -62,6 +62,7 @@ bool RequestParser::parse() {
                         else _state = S_COMPLETE;
                         break;
                     }
+                    *(_i) = '\0';
                     char * name = _buffer;
                     char * value = _buffer;
                     bool s = 0;

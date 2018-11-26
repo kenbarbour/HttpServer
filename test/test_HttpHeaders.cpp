@@ -134,3 +134,19 @@ TEST_CASE("Find matches when a q-factor is provided", "[HttpHeaders]")
   CHECK(h.in("Accept","application/xml"));
   CHECK(h.in("Accept","*/*"));
 }
+
+TEST_CASE("CURL headers", "[HttpHeaders]")
+{
+  HttpHeaders h;
+  h.set("Host","localhost:8080");
+  h.set("User-Agent","curl/7.55.1");
+  h.set("Accept","*/*");
+  h.set("Content-Length","3");
+  h.set("Content-Type","application/x-www-form-urlencoded");
+
+  CHECK_THAT(h.get("Host"), Equals("localhost:8080"));
+  CHECK_THAT(h.get("User-Agent"), Equals("curl/7.55.1"));
+  CHECK_THAT(h.get("Accept"), Equals("*/*"));
+  CHECK_THAT(h.get("Content-Length"), Equals("3"));
+  CHECK_THAT(h.get("Content-Type"), Equals("application/x-www-form-urlencoded"));
+}
