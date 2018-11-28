@@ -122,6 +122,8 @@ TEST_CASE("Buffer is a Stream","[Buffer][Stream]")
 
     buffer->write("Foo");
 
+    delete buffer;
+
 }
 
 TEST_CASE("Test clear","[Buffer]")
