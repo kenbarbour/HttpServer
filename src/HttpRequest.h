@@ -28,8 +28,9 @@ class HttpRequest
         const char * getHttpVersion() const;
         const char * setMessage(const char *);
         const char * setMessage(const char *, unsigned int);
-        const char * getMessage();
+        const char * getMessage() const;
         unsigned int getMessageLength() { return message_length; };
+        HttpRequest& operator=(const HttpRequest& other);
         char method [HTTPREQUEST_METHOD_SIZE];
         char * url;
         char httpver [HTTPREQUEST_HTTPVER_SIZE]; // TODO: private
