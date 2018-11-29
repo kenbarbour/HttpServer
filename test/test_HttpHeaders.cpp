@@ -101,7 +101,7 @@ TEST_CASE("Copy constructor", "[HttpHeaders]")
 TEST_CASE("HttpHeaders printTo", "[HttpHeaders]")
 {
     HttpHeaders h;
-    uint8_t buff[100];
+    uint8_t buff[100] = {};
     Buffer buffer(buff, 100);
 
     buffer.print(h);
