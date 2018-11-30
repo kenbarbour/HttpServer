@@ -10,7 +10,7 @@ QueryString::QueryString(const char* query) : n(0)
   if (query[0] == '\0') return;
 
   // create buffer
-  buffer_length = urlenc::decoded_length(query) + 1;
+  buffer_length = urlenc::decoded_length(query) + 2;
   buffer = (char*) malloc(buffer_length);
 
   // create fields
