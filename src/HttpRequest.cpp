@@ -63,6 +63,7 @@ const char * HttpRequest::getUrl() const
 const char * HttpRequest::setMessage(const char * str)
 {
     if (str == nullptr) {
+      if (this->message != nullptr) free(this->message);
       this->message = nullptr;
       message_length = 0;
       return this->message;
@@ -71,12 +72,16 @@ const char * HttpRequest::setMessage(const char * str)
     return this->setMessage(str, len);
 }
 
-const char * HttpRequest::setMessage(const char * message, unsigned int n)
+const char * HttpRequest::setMessage(const char * str, unsigned int n)
 {
-    if (this->message) free(this->message);
-    this->message = (char *) malloc(n + 1);
+    if (this->message == nullptr) {
+      this->message = (char *) malloc(n + 1);
+    } else if (n > this->message_length) {
+      this->message = (char *) realloc(this->message, n + 1);
+    }
     message_length = n;
-    strncpy(this->message, message, n+1);
+    strncpy(this->message, str, n);
+    this->message[n] = '\0';
     return this->message;
 }
 
@@ -87,12 +92,12 @@ const char * HttpRequest::getMessage() const
 
 HttpRequest::~HttpRequest()
 {
-    if (url) {
-        free(url);
-        url = nullptr;
+    if (this->url) {
+        free(this->url);
+        this->url = nullptr;
     }
-    if (message) {
-        free(message);
-        url = nullptr;
+    if (this->message != nullptr) {
+        free(this->message);
+        this->message = nullptr;
     }
 }

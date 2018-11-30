@@ -82,3 +82,21 @@ TEST_CASE("HttpRequest reassignment", "[HttpRequest][HttpRequest-reassign]")
     CHECK(!req2.headers.has("Content-Type"));
     CHECK_THAT(req2.headers.get("Accept"), Equals("*/*"));
 }
+
+TEST_CASE("Set message multiple times", "[HttpRequest]")
+{
+  HttpRequest req;
+
+  req.setMessage("foo=bar");
+  CHECK_THAT(req.getMessage(), Equals("foo=bar"));
+
+  req.setMessage("foo=bar&baz");
+  CHECK_THAT(req.getMessage(), Equals("foo=bar&baz"));
+
+  req.setMessage("");
+  CHECK_THAT(req.getMessage(), Equals(""));
+
+  req.setMessage(nullptr);
+  bool isNull = (req.getMessage() == nullptr);
+  CHECK(isNull);
+}
