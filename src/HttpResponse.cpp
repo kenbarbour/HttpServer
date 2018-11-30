@@ -3,17 +3,17 @@
 /**
  * TODO: this is the only constructor really needed unless _TEST_
  */
-HttpResponse::HttpResponse(Stream& buffer): 
-    content(&buffer), 
-    code(200), 
-    reason(), 
-    httpver() 
+HttpResponse::HttpResponse(Stream& buffer):
+    content(&buffer),
+    code(200),
+    reason(),
+    httpver()
 {};
 
-HttpResponse::HttpResponse():  
-    code(200), 
+HttpResponse::HttpResponse():
+    code(200),
     reason(),
-    httpver() 
+    httpver()
 {};
 
 
@@ -21,7 +21,7 @@ const char * HttpResponse::setReason(const char * reason)
 {
     if (this->reason != nullptr) free(this->reason);
     if (reason == nullptr) return this->reason = nullptr;
-    this->reason = (char *) malloc(strlen(reason));
+    this->reason = (char *) malloc(strlen(reason) + 1);
     strcpy(this->reason, reason);
 
     return this->reason;
