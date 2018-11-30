@@ -4,7 +4,7 @@
 class WiFiServer
 {
     public:
-        WiFiServer(uint16_t port) : port(port) {}
+        WiFiServer(uint16_t port) : port(port), _next(nullptr) {}
         WiFiClient available() {
             if (!_next) return WiFiClient();
             const char * client = _next;
