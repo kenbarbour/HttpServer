@@ -91,3 +91,15 @@ TEST_CASE("str_count_fields", "[QueryString][str_count_fields]")
   CHECK(QueryString::str_count_fields("foo=bar&baz=qux") == 2);
   CHECK(QueryString::str_count_fields("foo&bar&foo&bar") == 4);
 }
+
+TEST_CASE("empty string", "[QueryString][QueryString-empty]")
+{
+  QueryString qs("");
+  CHECK(qs.count() == 0);
+}
+
+TEST_CASE("constructor with nullptr", "[QueryString-nullptr]")
+{
+  QueryString qs(nullptr);
+  CHECK(qs.count() == 0);
+}

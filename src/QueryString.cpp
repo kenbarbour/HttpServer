@@ -7,7 +7,7 @@
  */
 QueryString::QueryString(const char* query) : n(0)
 {
-  if (query[0] == '\0') return;
+  if (query == nullptr || query[0] == '\0') return;
 
   // create buffer
   buffer_length = urlenc::decoded_length(query) + 2;
@@ -116,6 +116,8 @@ size_t QueryString::str_count_fields(const char* query)
 
 QueryString::~QueryString()
 {
-  free(buffer);
-  free(fields);
+  if (n) {
+    free(buffer);
+    free(fields);
+  }
 }
