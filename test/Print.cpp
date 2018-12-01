@@ -17,6 +17,8 @@ size_t Print::print(int i)
     i = (unsigned int) i << 1;
     i = (unsigned int) i >> 1;
     len += printNumber(i, 10);
+
+    return len;
 }
 
 size_t Print::print(const Printable& x)
