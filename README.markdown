@@ -11,8 +11,40 @@ HttpServer
 
 ## Usage
 
-Included here, a guide for implementing a Web Application as part of your Arduino project.  For simplicity,
-this guide stores variables and implements function globally.
+Included here, a guide for implementing a Web Application as part of your Arduino project.  A WebKernel instance is what handles incoming requests, and hands off control to user defined callback functions. For simplicity,
+this guide stores variables and implements functions globally.
+
+### Defining Routes
+A <tt>WebKernel</t> object needs an array of <tt>Route</tt>s in order to map incoming requests to a callback.  A <tt>Route</tt> is a struct containing an 8-bit mask of method flags, a c-stype string pointer to a URL pattern, and a callback function to handle requests matching the route.  The first route that matches the request will be used.
+
+An example Route array:
+```
+Route routes[] = {
+  { GET, "/", index },
+  { GET|POST, "/foo", foo}       // GET or POST request will match
+  { GET,PUT, "/bar/*/baz", bar}  // URL wildcard
+  { GET, "/static/#", static}    // handle anything starting with /static/ ...
+};
+```
+In the above example:
+* A GET request for the "/" URL will be handled by the <tt>index(HttpRequest&, HttpResponse&)</tt> callback.
+* A request for "/foo" with either GET or POST will be handled by <tt>foo(HttpRequest&, HttpResponse&)</tt>.
+* Any GET or PUT request matching the "/bar/\*/baz" pattern ('\*' matches anything but '/') will be handled by <tt>bar(HttpRequest&, HttpResponse&)</tt>.  Multiple wildcards are allowed.
+* A GET request for any url starting with "/static/" ... will be handled by <tt>static(HttpRequest&, HttpResponse&)</tt>.  This is useful when content in a certain path is stored entirely on a filesystem.
+* All other requests will result in either a 404 (Not Found) or a 405 (Method Not Allowed).
+
+### Response Buffer & Init handler
+While it is not required, it is recommended to declare a <tt>Buffer</tt> to hold response data in scope, and a <tt>WebKernel</tt> init handler to manage it.  <tt>HTTPResponse.content</tt> represents the content of the message returned to the user agent, and can be any <tt>Stream</tt> object.  For convenience, <tt>Buffer</tt> is a <tt>Stream</tt> that allows response content to be built using the <tt>print</tt> functions.  The init handler can clear the buffer with each new request.
+
+```
+// Outside of function definitions, so the Buffer isn't destroyed
+uint8_t _buffer_data[512];    // 512 bytes of buffer
+Buffer content(_buffer_data, sizeof(_buffer_data));
+
+void init_handler(HttpRequest& request, HttpResponse& response) {
+  
+}
+```
 
 ### Define
 Include <tt>WebKernel.h</tt> and define a _Routes_ array, _WebKernel_ object, and a _Response Buffer_ to store
@@ -123,4 +155,3 @@ To test, connect to its wireless access point and go to (http://192.168.1.4/), t
 Similar to the basic example, except this example also includes static content in the _data_ directory that needs to be uploaded separately.
 
 To upload the static content to an ESP8266, you will need to use the ESP8266FS tool described here: (https://esp8266.github.io/Arduino/versions/2.0.0/doc/filesystem.html#uploading-files-to-file-system)
-
