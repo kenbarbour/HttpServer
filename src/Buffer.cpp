@@ -1,5 +1,5 @@
 #include "Buffer.h"
-
+// a comment
 Buffer::Buffer(uint8_t * ptr, size_t len)
     : start(ptr), size(len), num(0), w_ptr(ptr), r_ptr(ptr)
 {}
